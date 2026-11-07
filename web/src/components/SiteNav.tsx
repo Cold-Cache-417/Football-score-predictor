@@ -11,10 +11,10 @@ export function SiteNav() {
           La Liga<span className="text-volt">.</span>Predict
         </Link>
         <div className="flex items-center gap-4">
-          <span className="hidden text-[11px] tracking-[0.12em] text-pine-400 sm:inline">
+          <span className="type-nav hidden text-[10px] text-pine-400 sm:inline">
             Dixon-Coles + CatBoost
           </span>
-          <span className="text-[11px] tracking-[0.12em] text-pine-400">2026/27</span>
+          <span className="type-nav text-[10px] text-pine-400">2026/27</span>
         </div>
       </div>
     </header>

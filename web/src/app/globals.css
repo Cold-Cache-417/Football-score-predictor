@@ -29,15 +29,85 @@ body {
   background-color: var(--color-pine-950);
   color: var(--color-pine-100);
   font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-variation-settings: "wdth" 100, "wght" 400;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
+/* =====================================================================
+   Type system — one superfamily, hierarchy carried by width + weight.
+
+   LALIGA's identity split a single wordmark into a Headline cut, a Text cut
+   and a kit cut. Archivo is the closest legally usable stand-in: a squared
+   grotesque with real width (62-125) and weight (100-900) axes. Rather than
+   pair two unrelated sans faces, the width axis does the work here.
+
+     SCORE   wdth 125 / wght 800   scorelines, the biggest numerals
+     STAT    wdth 118 / wght 700   probability figures
+     TITLE   wdth 112 / wght 700   club names, headings
+     LABEL   Courier Prime 700     tracked-out uppercase micro-labels
+     NAV     Courier Prime 700     navigation, same wire-service voice
+     BODY    Courier Prime 400     reading text, match-report tone
+   ===================================================================== */
 
 h1,
 h2,
 h3,
 .font-display {
-  font-family: var(--font-newsreader), Georgia, serif;
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-variation-settings: "wdth" 112, "wght" 700;
+  letter-spacing: -0.006em;
+}
+
+.type-score {
+  font-variation-settings: "wdth" 125, "wght" 800;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.025em;
+}
+
+.type-stat {
+  font-variation-settings: "wdth" 118, "wght" 700;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.012em;
+}
+
+.type-title {
+  font-variation-settings: "wdth" 112, "wght" 700;
+  letter-spacing: -0.006em;
+}
+
+.type-label {
+  font-family: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.075em;
+  word-spacing: 0.12em;
+}
+
+.type-nav {
+  font-family: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
+  word-spacing: 0.1em;
+}
+
+.type-body {
+  font-family: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
+  font-weight: 400;
+  letter-spacing: 0;
+  word-spacing: 0.02em;
+}
+
+/* Model breakdown under each outcome: tight enough to hold one line in a
+   third of a 390px column, tabular so all three read as the same shape. */
+.type-meta {
+  font-family: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: 0.015em;
+  word-spacing: 0.06em;
+  white-space: nowrap;
 }
 
 .tabular-nums {

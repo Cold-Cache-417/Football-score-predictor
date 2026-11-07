@@ -107,7 +107,7 @@ function TeamSide({
       <TeamCrest team={team} size={84} priority />
       <p
         className={cn(
-          "font-display text-balance text-center text-[clamp(21px,2.9vw,36px)] leading-[1.06] text-pine-100",
+          "type-title text-balance text-center text-[clamp(21px,2.4vw,32px)] leading-[1.06] text-pine-100",
           side === "home" ? "md:text-right" : "md:text-left",
         )}
       >
@@ -120,23 +120,23 @@ function TeamSide({
 function Score({ match }: { match: UpcomingMatch }) {
   return (
     <div className="col-span-2 row-start-2 flex flex-col items-center gap-2 md:col-span-1 md:col-start-2 md:row-start-1">
-      <span className="text-[10px] uppercase tracking-[0.18em] text-pine-400">
+      <span className="type-label text-[10px] text-pine-400">
         Most likely score
       </span>
-      <div className="flex items-baseline font-display leading-[0.8] text-pine-100">
-        <span className="tabular-nums text-[clamp(66px,9.6vw,132px)]">{match.homeGoals}</span>
-        <span className="mx-[0.1em] text-[clamp(32px,4.6vw,60px)] text-pine-100/30">–</span>
-        <span className="tabular-nums text-[clamp(66px,9.6vw,132px)]">{match.awayGoals}</span>
+      <div className="flex items-baseline leading-[0.8] text-pine-100">
+        <span className="type-score text-[clamp(66px,9.6vw,132px)]">{match.homeGoals}</span>
+        <span className="type-score mx-[0.1em] text-[clamp(32px,4.6vw,60px)] text-pine-100/30">–</span>
+        <span className="type-score text-[clamp(66px,9.6vw,132px)]">{match.awayGoals}</span>
       </div>
-      <div className="flex flex-col items-center gap-0.5">
-        <span className="tabular-nums text-[clamp(18px,2vw,24px)] font-medium text-volt">
+      <div className="flex flex-col items-center gap-1">
+        <span className="type-stat text-[clamp(19px,2.1vw,26px)] text-volt">
           {pct(match.scoreProb)}
         </span>
-        <span className="text-[10.5px] tracking-[0.04em] text-pine-400">
+        <span className="type-body text-[11px] text-pine-400">
           chance of this exact scoreline
         </span>
       </div>
-      <p className="mt-2 text-[11px] tracking-[0.08em] text-pine-400">
+      <p className="type-label mt-2 text-[10px] text-pine-400">
         {match.kickoffDateLabel} · {match.kickoffTimeLabel}
         {match.kickoffZoneLabel ? ` ${match.kickoffZoneLabel}` : ""}
       </p>
@@ -176,7 +176,7 @@ function OutcomeSplit({ match }: { match: UpcomingMatch }) {
             onPointerEnter={() => setActive(index)}
             onPointerLeave={() => setActive(null)}
           >
-            <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.16em] text-pine-400">
+            <span className="flex items-center gap-1.5 type-label text-[10px] text-pine-400">
               <span
                 aria-hidden="true"
                 className="inline-block h-1.5 w-1.5 rounded-full"
@@ -185,12 +185,12 @@ function OutcomeSplit({ match }: { match: UpcomingMatch }) {
               {OUTCOMES[index].label}
             </span>
             <span
-              className="tabular-nums font-display text-[clamp(23px,3.2vw,36px)] leading-none"
+              className="type-stat text-[clamp(24px,3.3vw,38px)] leading-none"
               style={{ color: OUTCOMES[index].colour }}
             >
               {pct(value)}
             </span>
-            <span className="tabular-nums text-[10px] tracking-[0.02em] text-pine-400/70">
+            <span className="type-meta text-[9px] text-pine-400/70">
               DC {pct(match.dc[index])} · CB {pct(match.cat[index])}
             </span>
           </div>
@@ -205,15 +205,15 @@ function EmptyState({ state }: { state: HeroState }) {
     <section className={cn("atmo relative isolate flex items-center overflow-hidden", SHELL)}>
       <div aria-hidden="true" className="atmo-grid pointer-events-none absolute inset-0" />
       <div className="relative z-10 mx-auto w-full max-w-6xl px-5 py-16 md:px-10">
-        <p className="mb-6 text-[11px] tracking-[0.14em] text-pine-400">
+        <p className="type-label mb-6 text-[10px] text-pine-400">
           Prediction snapshot · {state.snapshotLabel} CET
         </p>
-        <h1 className="max-w-3xl font-display text-[clamp(30px,5vw,58px)] leading-[1.05] text-pine-100">
+        <h1 className="max-w-3xl text-[clamp(30px,5vw,58px)] leading-[1.02] text-pine-100">
           {state.reason === "no_file"
             ? "No prediction snapshot found."
             : "No unplayed La Liga fixtures in this snapshot."}
         </h1>
-        <p className="mt-6 max-w-xl text-[13.5px] leading-relaxed text-pine-400">
+        <p className="type-body mt-6 max-w-xl text-[13.5px] leading-relaxed text-pine-400">
           {state.reason === "no_file"
             ? "The website reads data/website/upcoming_predictions.csv, which is missing. Run python -m src.export_website to build it."
             : `All ${state.totalUpcoming} exported fixtures have already kicked off. Re-run python -m src.export_website to refresh the snapshot. A finished match is never shown here as upcoming.`}
@@ -250,8 +250,8 @@ export function Hero({ state }: { state: HeroState }) {
         )}
       >
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-          <p className="text-[11px] tracking-[0.14em] text-pine-400">{match.season} season</p>
-          <p className="text-[11px] tracking-[0.14em] text-pine-400">
+          <p className="type-label text-[10px] text-pine-400">{match.season} season</p>
+          <p className="type-label text-[10px] text-pine-400">
             Prediction snapshot · {state.snapshotLabel} CET
           </p>
         </div>
@@ -272,11 +272,11 @@ export function Hero({ state }: { state: HeroState }) {
           <OutcomeSplit match={match} />
 
           <div className="flex flex-col gap-2.5 border-t border-white/[0.07] pt-4 md:flex-row md:items-start md:justify-between md:gap-10">
-            <p className="max-w-md text-[12px] leading-relaxed text-pine-400">
+            <p className="type-body max-w-md text-[12.5px] leading-relaxed text-pine-400">
               Home, draw and away are the 65/35 blend of Dixon-Coles and CatBoost. The scoreline
               comes from Dixon-Coles alone, so the two need not agree.
             </p>
-            <p className="max-w-xs text-[11.5px] leading-relaxed text-pine-400/85">
+            <p className="type-body max-w-xs text-[12px] leading-relaxed text-pine-400/85">
               Test RPS 0.1929 against the bookmaker&apos;s 0.1888 over 1,140 matches. The model does
               not beat the market.
             </p>

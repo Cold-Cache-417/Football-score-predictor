@@ -193,3 +193,43 @@ What actually shipped in the hero, verified in a browser:
 Still accurate from the original spec: dark-only palette, Newsreader + Archivo,
 volt accent distinct from the outcome colours, no purple/cyan/gradient text, no
 glassmorphism, and the "does not beat the market" disclosure.
+
+---
+
+## UPDATE 2026-11-07 — typography replaced (LALIGA direction)
+
+The Newsreader + Archivo pairing is **gone**. It read as editorial/literary, which is
+the opposite of what a football broadcast surface should feel like.
+
+Research: the 2023 LALIGA identity is by **Grávita** (strategy by PICNIC), with custom
+type by **Arillatype.Studio** (Pedro Arilla) — LALIGA Headline (9 styles + variable,
+weight and width axes), LALIGA Text (6 styles), LALIGA Players (kit). Those are
+**client-exclusive bespoke fonts** licensed to LALIGA; they are not sold and LALIGA's
+brand hub forbids third-party use. Not used here, and no substitute files were taken
+from unofficial sources.
+
+Display substitute: **Archivo** (OFL, Omnibus-Type) — a squared grotesque with a `wdth`
+axis (62–125) and `wght` (100–900), i.e. the same one-superfamily-two-optical-rolls
+logic LALIGA uses. Display hierarchy comes from **width as well as weight**.
+
+The small register is deliberately *not* the same family: labels, navigation,
+snapshot stamp, model breakdown and body copy are set in **Courier Prime** (OFL),
+a typewriter roman. Archivo shrunk to 10px went pale and tight and read like
+default product UI; the typewriter voice reads like a wire-service match report
+pinned beside the broadcast scoreboard, which gives the page two distinct voices
+instead of one face at every size.
+
+| Role | Axes | Applied to |
+|---|---|---|
+| Score | `wdth 125 / wght 800`, tabular, -0.025em | scoreline digits |
+| Stat | `wdth 118 / wght 700`, tabular | probability figures |
+| Title | `wdth 112 / wght 700` | club names, headings, wordmark |
+| Label | Courier Prime 700, uppercase, 0.075em | eyebrows, snapshot stamp, kickoff |
+| Meta | Courier Prime 400, 0.015em, nowrap | DC/CB breakdown |
+| Nav | Courier Prime 700, uppercase, 0.055em | navigation |
+| Body | Courier Prime 400 | reading text, captions |
+
+Monospace needs far less tracking than a condensed grotesque did, so tracking was
+retuned per role (0.075em labels, 0.055em nav, 0.015em meta, 0 body) rather than
+carried over. Class hooks live in `globals.css` (`.type-score`, `.type-stat`,
+`.type-title`, `.type-label`, `.type-meta`, `.type-nav`, `.type-body`).
