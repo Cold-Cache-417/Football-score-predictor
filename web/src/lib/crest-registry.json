@@ -1,0 +1,247 @@
+{
+  "Almeria": {
+    "crest": "/crests/almeria.png",
+    "wikipedia": "UD Almería",
+    "filePage": "https://en.wikipedia.org/wiki/File:UD_Almeria_logo.svg",
+    "license": "PD",
+    "usage": "Public domain"
+  },
+  "Athletic Bilbao": {
+    "crest": "/crests/athletic-bilbao.png",
+    "wikipedia": "Athletic Bilbao",
+    "filePage": "https://en.wikipedia.org/wiki/File:Club_Athletic_Bilbao_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Athletic_Bilbao\" title=\"Athletic Bilbao\">Athletic Bilbao</a>"
+  },
+  "Atletico Madrid": {
+    "crest": "/crests/atletico-madrid.png",
+    "wikipedia": "Atlético Madrid",
+    "filePage": "https://en.wikipedia.org/wiki/File:Atletico_Madrid_Logo_2024.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid\" title=\"Atlético Madrid\">Atlético Madrid</a>"
+  },
+  "Barcelona": {
+    "crest": "/crests/barcelona.png",
+    "wikipedia": "FC Barcelona",
+    "filePage": "https://en.wikipedia.org/wiki/File:FC_Barcelona_(crest).svg",
+    "license": "PD",
+    "usage": "Public domain"
+  },
+  "Cadiz": {
+    "crest": "/crests/cadiz.png",
+    "wikipedia": "Cádiz CF",
+    "filePage": "https://en.wikipedia.org/wiki/File:C%C3%A1diz_CF_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/C%C3%A1diz_CF\" title=\"Cádiz CF\">Cádiz CF</a>"
+  },
+  "Celta Vigo": {
+    "crest": "/crests/celta-vigo.png",
+    "wikipedia": "RC Celta de Vigo",
+    "filePage": "https://en.wikipedia.org/wiki/File:RC_Celta_de_Vigo_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/RC_Celta_de_Vigo\" title=\"RC Celta de Vigo\">RC Celta de Vigo</a>"
+  },
+  "Cordoba": {
+    "crest": "/crests/cordoba.png",
+    "wikipedia": "Córdoba CF",
+    "filePage": "https://en.wikipedia.org/wiki/File:C%C3%B3rdoba_CF_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/C%C3%B3rdoba_CF\" title=\"Córdoba CF\">Córdoba CF</a>"
+  },
+  "Deportivo Alaves": {
+    "crest": "/crests/deportivo-alaves.png",
+    "wikipedia": "Deportivo Alavés",
+    "filePage": "https://en.wikipedia.org/wiki/File:Deportivo_Alaves_logo_(2020).svg",
+    "license": "PD",
+    "usage": "Public domain"
+  },
+  "Deportivo La Coruna": {
+    "crest": "/crests/deportivo-la-coruna.png",
+    "wikipedia": "Deportivo de A Coruña",
+    "filePage": "https://en.wikipedia.org/wiki/File:RC_Deportivo_A_Coru%C3%B1a_logo_2026.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Deportivo_de_A_Coru%C3%B1a\" title=\"Deportivo de A Coruña\">Deportivo de A Coruña</a>"
+  },
+  "Eibar": {
+    "crest": "/crests/eibar.png",
+    "wikipedia": "SD Eibar",
+    "filePage": "https://en.wikipedia.org/wiki/File:SD_Eibar_logo_2016.svg",
+    "license": "PD",
+    "usage": "Public domain"
+  },
+  "Elche": {
+    "crest": "/crests/elche.png",
+    "wikipedia": "Elche CF",
+    "filePage": "https://en.wikipedia.org/wiki/File:Elche_CF_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Elche_CF\" title=\"Elche CF\">Elche CF</a>"
+  },
+  "Espanyol": {
+    "crest": "/crests/espanyol.png",
+    "wikipedia": "RCD Espanyol",
+    "filePage": "https://en.wikipedia.org/wiki/File:RCD_Espanyol_crest.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/RCD_Espanyol\" title=\"RCD Espanyol\">RCD Espanyol</a>"
+  },
+  "Getafe": {
+    "crest": "/crests/getafe.png",
+    "wikipedia": "Getafe CF",
+    "filePage": "https://en.wikipedia.org/wiki/File:Getafe_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Getafe_CF\" title=\"Getafe CF\">Getafe CF</a>"
+  },
+  "Girona": {
+    "crest": "/crests/girona.png",
+    "wikipedia": "Girona FC",
+    "filePage": "https://en.wikipedia.org/wiki/File:Girona_FC_Logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Girona_FC\" title=\"Girona FC\">Girona FC</a>"
+  },
+  "Granada": {
+    "crest": "/crests/granada.png",
+    "wikipedia": "Granada CF",
+    "filePage": "https://en.wikipedia.org/wiki/File:Logo_of_Granada_Club_de_F%C3%BAtbol.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Granada_CF\" title=\"Granada CF\">Granada CF</a>"
+  },
+  "Hercules": {
+    "crest": "/crests/hercules.png",
+    "wikipedia": "Hércules CF",
+    "filePage": "https://en.wikipedia.org/wiki/File:Hercules_CF_crest.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/H%C3%A9rcules_CF\" title=\"Hércules CF\">Hércules CF</a>"
+  },
+  "Huesca": {
+    "crest": "/crests/huesca.png",
+    "wikipedia": "SD Huesca",
+    "filePage": "https://en.wikipedia.org/wiki/File:Logo_of_SD_Huesca.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/SD_Huesca\" title=\"SD Huesca\">SD Huesca</a>"
+  },
+  "Las Palmas": {
+    "crest": "/crests/las-palmas.png",
+    "wikipedia": "UD Las Palmas",
+    "filePage": "https://en.wikipedia.org/wiki/File:UD_Las_Palmas_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/UD_Las_Palmas\" title=\"UD Las Palmas\">UD Las Palmas</a>"
+  },
+  "Leganes": {
+    "crest": "/crests/leganes.png",
+    "wikipedia": "CD Leganés",
+    "filePage": "https://en.wikipedia.org/wiki/File:Club_Deportivo_Legan%C3%A9s_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/CD_Legan%C3%A9s\" title=\"CD Leganés\">CD Leganés</a>"
+  },
+  "Levante": {
+    "crest": "/crests/levante.png",
+    "wikipedia": "Levante UD",
+    "filePage": "https://en.wikipedia.org/wiki/File:Levante_Uni%C3%B3n_Deportiva,_S.A.D._logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Levante_UD\" title=\"Levante UD\">Levante UD</a>"
+  },
+  "Malaga": {
+    "crest": "/crests/malaga.png",
+    "wikipedia": "Málaga CF",
+    "filePage": "https://en.wikipedia.org/wiki/File:M%C3%A1laga_CF.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/M%C3%A1laga_CF\" title=\"Málaga CF\">Málaga CF</a>"
+  },
+  "Mallorca": {
+    "crest": "/crests/mallorca.png",
+    "wikipedia": "RCD Mallorca",
+    "filePage": "https://en.wikipedia.org/wiki/File:Rcd_mallorca.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Real_Mallorca\" class=\"mw-redirect\" title=\"Real Mallorca\">Real Mallorca</a>"
+  },
+  "Osasuna": {
+    "crest": "/crests/osasuna.png",
+    "wikipedia": "CA Osasuna",
+    "filePage": "https://en.wikipedia.org/wiki/File:CA_Osasuna_2024_crest.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/CA_Osasuna\" title=\"CA Osasuna\">CA Osasuna</a>"
+  },
+  "Oviedo": {
+    "crest": "/crests/oviedo.png",
+    "wikipedia": "Real Oviedo",
+    "filePage": "https://en.wikipedia.org/wiki/File:Real_Oviedo_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Real_Oviedo\" title=\"Real Oviedo\">Real Oviedo</a>"
+  },
+  "Racing Santander": {
+    "crest": "/crests/racing-santander.png",
+    "wikipedia": "Racing de Santander",
+    "filePage": "https://en.wikipedia.org/wiki/File:Racing_de_Santander_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Racing_de_Santander\" title=\"Racing de Santander\">Racing de Santander</a>"
+  },
+  "Rayo Vallecano": {
+    "crest": "/crests/rayo-vallecano.png",
+    "wikipedia": "Rayo Vallecano",
+    "filePage": "https://en.wikipedia.org/wiki/File:Rayo_Vallecano_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Rayo_Vallecano\" title=\"Rayo Vallecano\">Rayo Vallecano</a>"
+  },
+  "Real Betis": {
+    "crest": "/crests/real-betis.png",
+    "wikipedia": "Real Betis",
+    "filePage": "https://en.wikipedia.org/wiki/File:Real_Betis_2022_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Real_Betis\" title=\"Real Betis\">Real Betis</a>"
+  },
+  "Real Madrid": {
+    "crest": "/crests/real-madrid.png",
+    "wikipedia": "Real Madrid CF",
+    "filePage": "https://en.wikipedia.org/wiki/File:Real_Madrid_CF.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Real_Madrid_CF\" title=\"Real Madrid CF\">Real Madrid CF</a>"
+  },
+  "Real Sociedad": {
+    "crest": "/crests/real-sociedad.png",
+    "wikipedia": "Real Sociedad",
+    "filePage": "https://en.wikipedia.org/wiki/File:Real_Sociedad_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Real_Sociedad\" title=\"Real Sociedad\">Real Sociedad</a>"
+  },
+  "Real Valladolid": {
+    "crest": "/crests/real-valladolid.png",
+    "wikipedia": "Real Valladolid",
+    "filePage": "https://en.wikipedia.org/wiki/File:Real_Valladolid_CF_crest.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Real_Valladolid\" title=\"Real Valladolid\">Real Valladolid</a>"
+  },
+  "Sevilla": {
+    "crest": "/crests/sevilla.png",
+    "wikipedia": "Sevilla FC",
+    "filePage": "https://en.wikipedia.org/wiki/File:Sevilla_FC_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Sevilla_FC\" title=\"Sevilla FC\">Sevilla FC</a>"
+  },
+  "Sporting Gijon": {
+    "crest": "/crests/sporting-gijon.png",
+    "wikipedia": "Sporting de Gijón",
+    "filePage": "https://en.wikipedia.org/wiki/File:Real_Sporting_de_Gijon.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Sporting_de_Gij%C3%B3n\" title=\"Sporting de Gijón\">Sporting de Gijón</a>"
+  },
+  "Valencia": {
+    "crest": "/crests/valencia.png",
+    "wikipedia": "Valencia CF",
+    "filePage": "https://en.wikipedia.org/wiki/File:Valenciacf.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Valencia_CF\" title=\"Valencia CF\">Valencia CF</a>"
+  },
+  "Villarreal": {
+    "crest": "/crests/villarreal.png",
+    "wikipedia": "Villarreal CF",
+    "filePage": "https://en.wikipedia.org/wiki/File:Villarreal_CF_logo-en.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Villarreal_CF\" title=\"Villarreal CF\">Villarreal CF</a>"
+  },
+  "Zaragoza": {
+    "crest": "/crests/zaragoza.png",
+    "wikipedia": "Real Zaragoza",
+    "filePage": "https://en.wikipedia.org/wiki/File:Real_Zaragoza_logo.svg",
+    "license": "Fair use",
+    "usage": "<a href=\"//en.wikipedia.org/wiki/Wikipedia:Non-free_use_rationale_guideline\" title=\"Wikipedia:Non-free use rationale guideline\">Fair use</a> of copyrighted material in the context of <a href=\"//en.wikipedia.org/wiki/Real_Zaragoza\" title=\"Real Zaragoza\">Real Zaragoza</a>"
+  }
+}

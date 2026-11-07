@@ -1,13 +1,20 @@
-import { Hero } from "@/components/Hero";
+import { Suspense } from "react";
+import { HeroSection } from "@/components/HeroSection";
 import { SiteNav } from "@/components/SiteNav";
-import { nextUpcomingFixture } from "@/lib/fixtures";
+
+function HeroFallback() {
+  return <div className="atmo min-h-[calc(100svh-3.5rem)]" aria-hidden="true" />;
+}
 
 export default function Home() {
-  const fixture = nextUpcomingFixture();
   return (
     <div className="flex min-h-screen flex-col bg-pine-950">
       <SiteNav />
-      <Hero fixture={fixture} />
+      <main className="flex-1">
+        <Suspense fallback={<HeroFallback />}>
+          <HeroSection />
+        </Suspense>
+      </main>
     </div>
   );
 }

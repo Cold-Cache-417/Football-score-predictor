@@ -136,7 +136,7 @@ fixtures on 11-07 and 11-08.
 - Never label upcoming predictions "LIVE". The previous UI did, in the nav
   and in the hero, while showing a fixture that had already kicked off.
 
-## 8. Outstanding risks
+## 8. Outstanding risks (as found, before the hero work)
 
 1. No version control — any edit is irreversible.
 2. Production build fails, so nothing can be shipped or screenshot-honestly
@@ -144,3 +144,35 @@ fixtures on 11-07 and 11-08.
 3. Fixture selection ignores the current date.
 4. No crest assets, despite the component and DESIGN.md implying real crests.
 5. Existing screenshots do not represent the current code.
+
+---
+
+## 9. Addendum — 2026-11-07, after the Home hero checkpoint
+
+All five risks above are now closed:
+
+1. **Git exists.** Initialised on branch `main` with a baseline commit of the
+   inherited state (84 files, no secrets, `.venv`/`node_modules`/`.next`/
+   `data/raw`/`data/processed`/`catboost_info`/`.pytest_cache`/
+   `.playwright-mcp` excluded). Each later change is a separate commit.
+2. **Build passes.** Two type errors fixed (named vs default `Hero` import;
+   undeclared `indicatorClassName` prop). `tsc --noEmit` and `npm run build`
+   both exit 0; `/` renders as Partial Prerender.
+3. **Fixture selection fixed.** Kickoff times from `data/raw/fixtures.csv` are
+   interpreted as Europe/Madrid, converted to absolute instants, and only
+   fixtures that have not started can be shown. Started matches are skipped;
+   if none remain the hero shows an explicit stale-snapshot state.
+4. **Crests exist.** 35 genuine Wikimedia crests in `web/public/crests/`, each
+   recorded in `web/src/lib/crest-registry.json` with Wikipedia page, file
+   page and licence (31 Fair use, 4 public domain). Initials fallback kept.
+5. **Screenshots regenerated and inspected** at 1440×900 and 390×844, plus a
+   reduced-motion capture at `design-check/hero-reduced-motion.png`.
+
+One new environment issue was found and fixed: `next dev` never hydrated
+because Next 16 rejects cross-origin dev resources from `127.0.0.1`, which
+killed the HMR socket. `allowedDevOrigins: ["127.0.0.1"]` in `next.config.ts`
+fixes it. This is why earlier dev-mode screenshots showed no animation or
+interaction.
+
+State of the web app, exports and remaining issues: see `CURRENT_STATE.md`.
+Scope that was actually delivered: see `NEXT_TASK.md`.

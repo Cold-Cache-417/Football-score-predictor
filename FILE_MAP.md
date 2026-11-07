@@ -126,6 +126,34 @@ web/design-check/         (actually at repo root: design-check/) stale screensho
 `hero-desktop.png`, `hero-mobile.png` — stale, white-background, broken.
 Do not treat as a design reference; regenerate as evidence.
 
+## Addendum — files added on 2026-11-07 (Home hero checkpoint)
+
+```
+web/public/crests/*.png            35 real club crests from Wikimedia
+web/src/lib/crest-registry.json    per-club source + licence + file page
+web/src/lib/crests.ts              typed access to the registry
+web/src/components/HeroSection.tsx server component: connection() + getHeroState()
+```
+
+Changed:
+
+| File | Change |
+|---|---|
+| `web/src/lib/fixtures.ts` | rewritten — Europe/Madrid kickoff handling, status, empty state |
+| `web/src/components/Hero.tsx` | rewritten — headline + scoreline + split bar + cursor light, no Framer Motion |
+| `web/src/components/TeamCrest.tsx` | now renders `next/image` from the registry, initials fallback kept |
+| `web/src/components/SiteNav.tsx` | "LIVE" badge removed |
+| `web/src/app/page.tsx` | Suspense + `HeroSection`, static fallback shell |
+| `web/src/app/globals.css` | dark-only tokens, atmosphere layers, bar reveal, reduced-motion rule |
+| `web/src/components/ui/{progress,card,badge}.tsx` | type/utility fixes (`indicatorClassName`, `rounded-16`, `pine-700/300`) |
+| `web/next.config.ts` | `allowedDevOrigins: ["127.0.0.1"]` so dev mode hydrates |
+| `web/src/lib/teams.ts` | colours for all 35 clubs + readable-ink helper |
+| `.gitignore` | ignores generated tooling output |
+| `design-check/*.png` | regenerated screenshots (desktop, mobile, reduced motion) |
+
+New docs: `HANDOFF.md`, `AGENT_SETUP.md`, `CURRENT_STATE.md`, `NEXT_TASK.md`,
+`FILE_MAP.md`.
+
 ## `.playwright-mcp/`
 
 One accessibility snapshot and one console log from 2026-11-07 11:05.

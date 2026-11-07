@@ -163,3 +163,33 @@ Outcomes (dark): home `#34D399` (emerald), draw `#F5C451` (amber), away `#FF4D24
 - ✅ No remaining pages, API, or backend work (STOP here as instructed)
 
 **Next move:** When you approve this build, implement remaining pages and FastAPI backend in subsequent sessions.
+
+---
+
+## UPDATE — 2026-11-07 (implemented state, supersedes the claims above where they differ)
+
+What actually shipped in the hero, verified in a browser:
+
+- **Background:** a CSS hairline grid (masked, 64px) plus layered radial washes
+  and a cursor-following volt light. The React Bits **Ripple Grid is no longer
+  mounted** — it was configured with `glow={0}` and `mouseInteraction={false}`,
+  i.e. static, so the two grids competed for the same job. `RippleGrid.tsx`
+  remains in the repo unused.
+- **Motion:** one orchestrated moment — the split probability bar grows from
+  `scaleX(0)` to the real 45.3 / 28.8 / 25.9 proportions. Framer Motion is no
+  longer used in the hero; number count-ups were removed because they rendered
+  `0.00` into the pre-hydration HTML.
+- **Cursor light:** one `requestAnimationFrame` loop writing `--glow-x` and
+  `--glow-y` on the section. No React state per pointer event. Disabled for
+  `prefers-reduced-motion` and for coarse pointers.
+- **Crests:** 35 real Wikimedia files in `web/public/crests/` with a licence
+  registry (`web/src/lib/crest-registry.json`). 31 are Fair use, 4 public
+  domain. Initials fallback retained.
+- **No "LIVE" anywhere.** The hero labels the data as a prediction snapshot and
+  prints the snapshot timestamp taken from the CSV's modification time.
+- **Layout:** measured at exactly 900px tall in a 1440×900 viewport and 844px
+  at 390×844, with zero horizontal overflow.
+
+Still accurate from the original spec: dark-only palette, Newsreader + Archivo,
+volt accent distinct from the outcome colours, no purple/cyan/gradient text, no
+glassmorphism, and the "does not beat the market" disclosure.

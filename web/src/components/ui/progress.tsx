@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 function Progress({
   className,
   value,
-  indicatorClassName,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & {
   value?: number | null;

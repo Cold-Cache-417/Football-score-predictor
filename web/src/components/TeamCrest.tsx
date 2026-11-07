@@ -1,30 +1,52 @@
-import type { CSSProperties, ReactNode } from "react";
+import Image from "next/image";
+import { crestFor } from "@/lib/crests";
+import { readableInk, teamColour, teamInitials } from "@/lib/teams";
+import { cn } from "@/lib/utils";
 
 type TeamCrestProps = {
   team: string;
-  colour: string;
   size?: number;
+  priority?: boolean;
+  className?: string;
 };
 
-/** Club crest: real SVG asset when available, initials badge fallback. */
-export function TeamCrest({ team, colour, size = 40 }: TeamCrestProps) {
-  const initials = team
-    .split(/[\s-]+/)
-    .filter(Boolean)
-    .slice(0, 3)
-    .map((w) => w[0]?.toUpperCase() ?? "")
-    .join("");
-  const style: CSSProperties = {
-    width: size,
-    height: size,
-  };
+/**
+ * Club crest from web/public/crests (see src/lib/crest-registry.json for the
+ * source and licence of each file). Falls back to a club-colour badge with
+ * initials when no crest is available — never to a generated or guessed badge.
+ */
+export function TeamCrest({ team, size = 64, priority = false, className }: TeamCrestProps) {
+  const record = crestFor(team);
+
+  if (record) {
+    return (
+      <Image
+        src={record.crest}
+        alt={`${team} crest`}
+        width={size}
+        height={size}
+        sizes={`${size}px`}
+        priority={priority}
+        className={cn(
+          "object-contain drop-shadow-[0_12px_28px_rgba(0,0,0,0.55)]",
+          className,
+        )}
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+
+  const colour = teamColour(team);
   return (
     <div
-      className="rounded-full flex items-center justify-center font-display font-semibold text-white select-none"
-      style={{ ...style, backgroundColor: colour }}
+      role="img"
       aria-label={`${team} crest`}
+      className={cn("flex items-center justify-center rounded-full", className)}
+      style={{ width: size, height: size, backgroundColor: colour, color: readableInk(colour) }}
     >
-      <span style={{ fontSize: size * 0.36 }}>{initials || "FC"}</span>
+      <span className="font-display font-semibold" style={{ fontSize: size * 0.34 }}>
+        {teamInitials(team) || "FC"}
+      </span>
     </div>
   );
 }

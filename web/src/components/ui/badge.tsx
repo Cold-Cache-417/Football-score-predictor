@@ -8,7 +8,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: "border-volt/40 bg-volt/10 text-volt",
-        outline: "border-pine-700 text-pine-300",
+        outline: "border-pine-800 text-pine-400",
         home: "border-home/40 bg-home/10 text-home",
         draw: "border-draw/40 bg-draw/10 text-draw",
         away: "border-away/40 bg-away/10 text-away",

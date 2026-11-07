@@ -1,30 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  /* Dark theme tokens */
+  /* Dark-only palette. There is no light theme. */
   --color-pine-950: #060c09;
-  --color-pine-900: #0c1410;
-  --color-pine-800: #121b15;
-  --color-pine-100: #edf4ee;
+  --color-pine-900: #0b1310;
+  --color-pine-800: #111b16;
   --color-pine-400: #8ca296;
+  --color-pine-100: #edf4ee;
 
-  /* Light theme tokens */
-  --color-bone: #ede5d5;
-  --color-bone-surface: #f8f4ea;
-  --color-ink-light: #181310;
-  --color-muted-light: #6f6759;
-
-  /* Accents */
+  /* Accent: model / prediction. Never a club colour. */
   --color-volt: #d9ff3f;
-  --color-accent-light: #c1440c;
 
   /* Outcomes */
   --color-home: #34d399;
   --color-draw: #f5c451;
   --color-away: #ff4d24;
-  --color-home-light: #157a4b;
-  --color-draw-light: #b45309;
-  --color-away-light: #b91c1c;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  background-color: var(--color-pine-950);
 }
 
 body {
@@ -42,21 +40,75 @@ h3,
   font-family: var(--font-newsreader), Georgia, serif;
 }
 
-.font-display {
-  font-family: var(--font-newsreader), Georgia, serif;
-}
-
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
-/* Fine hairline grid for the hero "broadcast night" background */
-.hero-fine-grid {
-  background-image: linear-gradient(
-      to right,
-      rgba(233, 255, 233, 0.05) 1px,
-      transparent 1px
-    ),
-    linear-gradient(to bottom, rgba(233, 255, 233, 0.05) 1px, transparent 1px);
-  background-size: 72px 72px;
+::selection {
+  background: var(--color-volt);
+  color: #0a110d;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-volt);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* --- atmosphere ------------------------------------------------------- */
+
+/* Layered washes over near-black: a cool green lift from the top, a hint of
+   volt from the lower right. No purple, no cyan, no gradients in text. */
+.atmo {
+  background:
+    radial-gradient(110% 70% at 50% -15%, rgba(52, 211, 153, 0.09), transparent 62%),
+    radial-gradient(80% 60% at 88% 112%, rgba(217, 255, 63, 0.055), transparent 68%),
+    var(--color-pine-950);
+}
+
+/* Single hairline grid, masked so it fades out rather than tiling the page. */
+.atmo-grid {
+  background-image:
+    linear-gradient(to right, rgba(233, 255, 233, 0.042) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(233, 255, 233, 0.042) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(125% 95% at 50% 26%, #000 16%, transparent 76%);
+  mask-image: radial-gradient(125% 95% at 50% 26%, #000 16%, transparent 76%);
+}
+
+/* Cursor light. --glow-x / --glow-y are written by one rAF loop. */
+.atmo-light {
+  background: radial-gradient(
+    560px circle at var(--glow-x, 50%) var(--glow-y, 32%),
+    rgba(217, 255, 63, 0.085),
+    transparent 70%
+  );
+}
+
+/* The split bar grows once, revealing the real proportions. Transform only,
+   so it composites without layout work; the reduced-motion rule below
+   collapses it to its final state. */
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.bar-reveal {
+  transform-origin: left center;
+  animation: bar-grow 1.1s cubic-bezier(0.16, 1, 0.3, 1) 140ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
