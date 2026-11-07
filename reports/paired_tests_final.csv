@@ -1,0 +1,46 @@
+A,B,metric,mean(A-B),ci_lo,ci_hi,P(A better)
+Bookmaker (de-vigged),CatBoost (tuned),RPS,-0.0045,-0.00792,-0.00132,0.998
+Bookmaker (de-vigged),CatBoost (tuned),log_loss,-0.0133,-0.02503,-0.00215,0.992
+Bookmaker (de-vigged),CatBoost (tuned),accuracy,0.0142,-0.00439,0.03333,0.925
+Bookmaker (de-vigged),Dixon-Coles (time decay),RPS,-0.00529,-0.00831,-0.00236,1.0
+Bookmaker (de-vigged),Dixon-Coles (time decay),log_loss,-0.0162,-0.0257,-0.00686,1.0
+Bookmaker (de-vigged),Dixon-Coles (time decay),accuracy,0.02201,0.00614,0.03772,0.998
+Bookmaker (de-vigged),XGBoost (tuned),RPS,-0.01212,-0.01733,-0.00717,1.0
+Bookmaker (de-vigged),XGBoost (tuned),log_loss,-0.04569,-0.0667,-0.02501,1.0
+Bookmaker (de-vigged),XGBoost (tuned),accuracy,0.03332,0.00965,0.05704,0.998
+Blend (DC + CatBoost),Bookmaker (de-vigged),RPS,0.00416,0.00132,0.00708,0.001
+Blend (DC + CatBoost),Bookmaker (de-vigged),log_loss,0.0119,0.00294,0.0213,0.005
+Blend (DC + CatBoost),Bookmaker (de-vigged),accuracy,-0.0194,-0.03421,-0.00439,0.004
+Blend (DC + CatBoost),CatBoost (tuned),RPS,-0.00035,-0.00211,0.00136,0.646
+Blend (DC + CatBoost),CatBoost (tuned),log_loss,-0.0014,-0.0078,0.00477,0.663
+Blend (DC + CatBoost),CatBoost (tuned),accuracy,-0.00519,-0.0193,0.00789,0.215
+Blend (DC + CatBoost),Dixon-Coles (time decay),RPS,-0.00114,-0.00206,-0.00022,0.992
+Blend (DC + CatBoost),Dixon-Coles (time decay),log_loss,-0.0043,-0.0077,-0.00095,0.995
+Blend (DC + CatBoost),Dixon-Coles (time decay),accuracy,0.00262,-0.00702,0.01228,0.672
+Blend (DC + CatBoost),XGBoost (tuned),RPS,-0.00797,-0.0124,-0.00393,1.0
+Blend (DC + CatBoost),XGBoost (tuned),log_loss,-0.0338,-0.05266,-0.01544,1.0
+Blend (DC + CatBoost),XGBoost (tuned),accuracy,0.01393,-0.00877,0.03509,0.88
+CatBoost (tuned),Dixon-Coles (time decay),RPS,-0.00079,-0.00342,0.0019,0.714
+CatBoost (tuned),Dixon-Coles (time decay),log_loss,-0.0029,-0.0124,0.00689,0.72
+CatBoost (tuned),Dixon-Coles (time decay),accuracy,0.00781,-0.00877,0.02458,0.795
+CatBoost (tuned),XGBoost (tuned),RPS,-0.00762,-0.0114,-0.00392,1.0
+CatBoost (tuned),XGBoost (tuned),log_loss,-0.03239,-0.04936,-0.01643,1.0
+CatBoost (tuned),XGBoost (tuned),accuracy,0.01912,-0.00088,0.0395,0.962
+Dixon-Coles (time decay),XGBoost (tuned),RPS,-0.00683,-0.01184,-0.00209,0.997
+Dixon-Coles (time decay),XGBoost (tuned),log_loss,-0.0295,-0.05022,-0.00908,0.999
+Dixon-Coles (time decay),XGBoost (tuned),accuracy,0.01131,-0.01228,0.03509,0.818
+Base rates,Bookmaker (de-vigged),RPS,0.03666,0.02985,0.0437,0.0
+Base rates,Bookmaker (de-vigged),log_loss,0.1116,0.08992,0.13295,0.0
+Base rates,Bookmaker (de-vigged),accuracy,-0.09491,-0.12105,-0.0693,0.0
+Base rates,Blend (DC + CatBoost),RPS,0.0325,0.02541,0.03976,0.0
+Base rates,Blend (DC + CatBoost),log_loss,0.09971,0.07777,0.12165,0.0
+Base rates,Blend (DC + CatBoost),accuracy,-0.07551,-0.10351,-0.04825,0.0
+Base rates,CatBoost (tuned),RPS,0.03216,0.02442,0.03994,0.0
+Base rates,CatBoost (tuned),log_loss,0.0983,0.07285,0.12254,0.0
+Base rates,CatBoost (tuned),accuracy,-0.0807,-0.11053,-0.05175,0.0
+Base rates,Dixon-Coles (time decay),RPS,0.03137,0.02435,0.03863,0.0
+Base rates,Dixon-Coles (time decay),log_loss,0.09541,0.07429,0.11663,0.0
+Base rates,Dixon-Coles (time decay),accuracy,-0.0729,-0.10088,-0.04647,0.0
+Base rates,XGBoost (tuned),RPS,0.02454,0.01561,0.03322,0.0
+Base rates,XGBoost (tuned),log_loss,0.06591,0.03388,0.09677,0.0
+Base rates,XGBoost (tuned),accuracy,-0.06159,-0.09298,-0.0307,0.0

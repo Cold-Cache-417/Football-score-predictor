@@ -1,0 +1,4 @@
+metric,Base rates,Blend (DC + CatBoost),Bookmaker (de-vigged),CatBoost (tuned),Dixon-Coles (time decay),XGBoost (tuned)
+RPS,0.22534,0.19293,0.18877,0.19329,0.19406,0.20095
+accuracy,0.45789,0.53333,0.55263,0.5386,0.5307,0.5193
+log_loss,1.06548,0.96606,0.9541,0.96754,0.97033,1.00027

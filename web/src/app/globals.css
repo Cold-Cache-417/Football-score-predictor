@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  /* Dark theme tokens */
+  --color-pine-950: #060c09;
+  --color-pine-900: #0c1410;
+  --color-pine-800: #121b15;
+  --color-pine-100: #edf4ee;
+  --color-pine-400: #8ca296;
+
+  /* Light theme tokens */
+  --color-bone: #ede5d5;
+  --color-bone-surface: #f8f4ea;
+  --color-ink-light: #181310;
+  --color-muted-light: #6f6759;
+
+  /* Accents */
+  --color-volt: #d9ff3f;
+  --color-accent-light: #c1440c;
+
+  /* Outcomes */
+  --color-home: #34d399;
+  --color-draw: #f5c451;
+  --color-away: #ff4d24;
+  --color-home-light: #157a4b;
+  --color-draw-light: #b45309;
+  --color-away-light: #b91c1c;
+}
+
+body {
+  background-color: var(--color-pine-950);
+  color: var(--color-pine-100);
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-newsreader), Georgia, serif;
+}
+
+.font-display {
+  font-family: var(--font-newsreader), Georgia, serif;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Fine hairline grid for the hero "broadcast night" background */
+.hero-fine-grid {
+  background-image: linear-gradient(
+      to right,
+      rgba(233, 255, 233, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(233, 255, 233, 0.05) 1px, transparent 1px);
+  background-size: 72px 72px;
+}

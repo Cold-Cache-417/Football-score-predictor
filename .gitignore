@@ -1,0 +1,11 @@
+.venv/
+data/raw/
+data/processed/
+__pycache__/
+*.pyc
+
+# generated / tooling artefacts
+catboost_info/
+.pytest_cache/
+.playwright-mcp/
+.DS_Store

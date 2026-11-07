@@ -1,0 +1,21 @@
+# Core
+pandas==3.1.1
+numpy==2.5.4
+pyarrow==26.0.1
+requests==2.34.2
+scipy==1.18.1
+matplotlib==3.11.2
+
+# Modelling (Phase 2+)
+penaltyblog==1.13.1
+
+# ML upgrade (Phase 3)
+catboost==1.2.10
+xgboost==3.4.1
+scikit-learn==1.9.1
+
+# App (Phase 5)
+# streamlit
+
+# Tests
+pytest==9.2.0

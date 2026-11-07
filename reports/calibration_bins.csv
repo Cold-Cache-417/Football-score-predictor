@@ -1,0 +1,41 @@
+model,outcome,bin_low,mean_pred,freq,n
+Base rates,home,0.4,0.4662,0.4579,1140
+Base rates,draw,0.2,0.2505,0.2605,1140
+Base rates,away,0.2,0.2834,0.2816,1140
+Bookmaker (de-vigged),home,0.1,0.1611,0.1392,79
+Bookmaker (de-vigged),home,0.2,0.2553,0.1854,151
+Bookmaker (de-vigged),home,0.3,0.3553,0.3402,241
+Bookmaker (de-vigged),home,0.4,0.4485,0.4498,249
+Bookmaker (de-vigged),home,0.5,0.5476,0.5854,205
+Bookmaker (de-vigged),home,0.6,0.6494,0.7558,86
+Bookmaker (de-vigged),home,0.7,0.7458,0.8539,89
+Bookmaker (de-vigged),home,0.8,0.8286,0.871,31
+Bookmaker (de-vigged),draw,0.1,0.1599,0.1043,163
+Bookmaker (de-vigged),draw,0.2,0.2628,0.2744,634
+Bookmaker (de-vigged),draw,0.3,0.3186,0.3136,338
+Bookmaker (de-vigged),away,0.0,0.0775,0.0505,99
+Bookmaker (de-vigged),away,0.1,0.1569,0.121,248
+Bookmaker (de-vigged),away,0.2,0.2501,0.2486,350
+Bookmaker (de-vigged),away,0.3,0.3438,0.3184,201
+Bookmaker (de-vigged),away,0.4,0.4416,0.5304,115
+Bookmaker (de-vigged),away,0.5,0.547,0.575,80
+Bookmaker (de-vigged),away,0.6,0.6508,0.5152,33
+Bookmaker (de-vigged),away,0.7,0.7438,0.7857,14
+Dixon-Coles (time decay),home,0.1,0.1619,0.1739,92
+Dixon-Coles (time decay),home,0.2,0.2592,0.2158,139
+Dixon-Coles (time decay),home,0.3,0.3541,0.3207,237
+Dixon-Coles (time decay),home,0.4,0.447,0.4751,261
+Dixon-Coles (time decay),home,0.5,0.5469,0.525,200
+Dixon-Coles (time decay),home,0.6,0.6492,0.79,100
+Dixon-Coles (time decay),home,0.7,0.7468,0.8415,82
+Dixon-Coles (time decay),home,0.8,0.8302,0.8846,26
+Dixon-Coles (time decay),draw,0.1,0.1636,0.0903,144
+Dixon-Coles (time decay),draw,0.2,0.2579,0.2762,822
+Dixon-Coles (time decay),draw,0.3,0.3151,0.3353,170
+Dixon-Coles (time decay),away,0.0,0.073,0.0645,93
+Dixon-Coles (time decay),away,0.1,0.1548,0.1215,214
+Dixon-Coles (time decay),away,0.2,0.2511,0.2385,327
+Dixon-Coles (time decay),away,0.3,0.3446,0.3224,245
+Dixon-Coles (time decay),away,0.4,0.4492,0.4672,137
+Dixon-Coles (time decay),away,0.5,0.5503,0.4638,69
+Dixon-Coles (time decay),away,0.6,0.638,0.62,50

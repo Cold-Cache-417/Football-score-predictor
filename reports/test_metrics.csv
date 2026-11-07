@@ -1,0 +1,4 @@
+metric,Base rates,Bookmaker (de-vigged),Dixon-Coles (time decay)
+RPS,0.22534,0.18877,0.19406
+accuracy,0.45789,0.55263,0.5307
+log_loss,1.06548,0.9541,0.97033
