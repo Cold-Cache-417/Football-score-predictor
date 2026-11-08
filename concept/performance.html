@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Performance — Calibra concept</title>
+  <meta name="description" content="An illustrative performance record for the Calibra forecast: RPS, log loss, accuracy, calibration and the weak spots.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/concept.css">
+  <script src="assets/js/data.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body data-page="performance">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="nav-wrap">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="Calibra concept home">
+          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M25.6 9.8a11 11 0 1 0 0 12.4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            <circle class="mark-accent" cx="25.6" cy="16" r="2.7"/>
+          </svg>
+          <span>CALIBRA</span>
+        </a>
+        <div class="nav-links">
+          <a class="nav-link" data-nav="home" href="index.html">Overview</a>
+          <a class="nav-link" data-nav="fixtures" href="fixtures.html">Fixtures</a>
+          <a class="nav-link" data-nav="models" href="models.html">Models</a>
+          <a class="nav-link" data-nav="performance" href="performance.html">Performance</a>
+          <a class="nav-link" data-nav="about" href="about.html">Method</a>
+        </div>
+        <div class="nav-right">
+          <span class="nav-chip">Prototype · illustrative data</span>
+          <a class="btn btn--primary" href="fixtures.html">Browse fixtures</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="page-hero-grid">
+          <div>
+            <div class="section-label">Performance</div>
+            <h1>A record that includes the misses.</h1>
+            <p class="lead">A forecast is only credible if it can be checked. This is an illustrative record: season by season, against the closing market, with the weak spots left visible.</p>
+          </div>
+          <div class="page-hero-aside">
+            <p class="sample-note">All scores are illustrative. No model is evaluated on this page.</p>
+            <p>1,140 held-out matches · 2019/20–2025/26. Lower RPS and log loss are better; higher accuracy is better.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="wrap">
+        <div class="metric-bar">
+          <div class="metric-tabs" role="tablist" aria-label="Performance metric">
+            <button type="button" role="tab" data-metric="rps" aria-selected="true">RPS</button>
+            <button type="button" role="tab" data-metric="logloss" aria-selected="false" tabindex="-1">Log loss</button>
+            <button type="button" role="tab" data-metric="accuracy" aria-selected="false" tabindex="-1">Accuracy</button>
+          </div>
+          <p id="metric-note">Lower is better · 1,140 held-out matches</p>
+        </div>
+
+        <div class="chart-panel">
+          <div class="chart-head">
+            <div>
+              <h2 id="chart-title">Ranked probability score</h2>
+              <p id="chart-sub">Season by season · lower is better</p>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-key">Calibra blend</span>
+              <span class="legend-key legend-key--market">Closing market</span>
+            </div>
+          </div>
+          <div class="chart-svg" id="metric-chart" role="img" aria-label="Line chart of ranked probability score by season for the Calibra blend and the closing market."></div>
+          <div class="chart-caption">
+            <span>Illustrative scores, not live results.</span>
+            <span>2019/20–2025/26</span>
+          </div>
+          <div class="sr-only" id="chart-table"></div>
+        </div>
+
+        <div class="calibration-grid">
+          <div class="calibration-copy">
+            <div class="section-label">Calibration</div>
+            <h2>When it says 70%, it should happen about 70% of the time.</h2>
+            <p>Accuracy gets the headlines; calibration keeps a forecast honest. The blend sits close to the diagonal, with a slight overconfidence in the middle bands.</p>
+            <div class="record-stats">
+              <div class="record-stat"><span>Calibration error</span><strong>1.8%</strong></div>
+              <div class="record-stat"><span>Held-out matches</span><strong>1,140</strong></div>
+            </div>
+          </div>
+          <div class="calibration-chart" id="calibration-chart" role="img" aria-label="Calibration chart: predicted probability against observed frequency."></div>
+        </div>
+
+        <div class="performance-block">
+          <div class="model-section-head">
+            <h2>Where it is weak.</h2>
+            <p>Three honest failure modes. They are part of the method, not a disclaimer bolted onto it.</p>
+          </div>
+          <div class="weak-spots" id="weak-spots"></div>
+        </div>
+
+        <div class="performance-block">
+          <div class="model-section-head">
+            <h2>Recent seasons.</h2>
+            <p>Illustrative RPS by season. The gap to market is small, persistent and worth showing.</p>
+          </div>
+          <div class="season-table-wrap">
+          <table class="season-table">
+            <caption class="sr-only">Illustrative ranked probability score by season</caption>
+            <thead>
+              <tr><th scope="col">Season</th><th scope="col">Calibra blend</th><th scope="col">Closing market</th><th scope="col">Gap</th></tr>
+            </thead>
+            <tbody id="season-body">
+              <tr><td>2023/24</td><td>0.193</td><td>0.189</td><td class="delta">+0.004</td></tr>
+              <tr><td>2024/25</td><td>0.192</td><td>0.188</td><td class="delta">+0.004</td></tr>
+              <tr><td>2025/26</td><td>0.194</td><td>0.190</td><td class="delta">+0.004</td></tr>
+            </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="index.html" aria-label="Calibra concept home">
+            <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <path d="M25.6 9.8a11 11 0 1 0 0 12.4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              <circle class="mark-accent" cx="25.6" cy="16" r="2.7"/>
+            </svg>
+            <span>CALIBRA</span>
+          </a>
+          <p class="footer-statement">A calmer kind of football forecast. Full scorelines, open methods, honest misses.</p>
+        </div>
+        <div class="footer-col">
+          <h2>Explore</h2>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="fixtures.html">Fixtures</a></li>
+            <li><a href="models.html">Models</a></li>
+            <li><a href="performance.html">Performance</a></li>
+            <li><a href="about.html">Method</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Prototype</h2>
+          <ul>
+            <li><a href="about.html#prototype">What is illustrative</a></li>
+            <li><a href="about.html#resources">Design resources</a></li>
+            <li><a href="about.html#accessibility">Accessibility</a></li>
+            <li><a href="about.html#colophon">Colophon</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Reference</h2>
+          <ul>
+            <li><a href="https://www.laliga.com/en-GB" target="_blank" rel="noopener noreferrer">La Liga</a></li>
+            <li><a href="https://developer.apple.com/design/human-interface-guidelines/" target="_blank" rel="noopener noreferrer">Apple HIG</a></li>
+            <li><a href="https://www.ui-skills.com/skills/superfuture/design-review" target="_blank" rel="noopener noreferrer">Superfuture review</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>Calibra is an independent design concept. Not affiliated with La Liga. Every number on this site is illustrative, not live model output.</p>
+        <p>Vanilla HTML, CSS and JavaScript. No trackers, no network calls. <span data-year>2026</span></p>
+      </div>
+      <div class="footer-wordmark" aria-hidden="true">CALIBRA</div>
+    </div>
+  </footer>
+
+  <nav class="mobile-dock" aria-label="Mobile">
+    <a data-nav="home" href="index.html"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 9.5 10 4l7 5.5V17a1 1 0 0 1-1 1h-4v-5H8v5H4a1 1 0 0 1-1-1V9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Overview</span></a>
+    <a data-nav="fixtures" href="fixtures.html"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 8.5h14M7 3v3M13 3v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Fixtures</span></a>
+    <a data-nav="models" href="models.html"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m10 3 7 3.5-7 3.5-7-3.5L10 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m3 10 7 3.5 7-3.5M3 13.5 10 17l7-3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Models</span></a>
+    <a data-nav="performance" href="performance.html"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16V9M8 16V5M12 16v-4M16 16V7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Stats</span></a>
+    <a data-nav="about" href="about.html"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.7"/><path d="M10 9v5M10 6.5v.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Method</span></a>
+  </nav>
+</body>
+</html>
