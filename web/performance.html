@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Performance — Calibra</title>
+  <meta name="description" content="The performance record for the Calibra forecast: RPS, log loss, accuracy, calibration, season detail and the weak spots.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d1113">
+  <meta name="robots" content="noindex, nofollow">
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("calibra-theme");
+        var theme = stored === "light" || stored === "dark" ? stored : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (error) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/barlow-condensed-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/barlow-condensed-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/roboto-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/roboto-mono-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/roboto-mono-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/concept.css?v=10">
+  <script src="/api/bootstrap.js"></script>
+  <script src="assets/js/data.js?v=6" defer></script>
+  <script src="assets/js/data-live.js?v=6" defer></script>
+  <script src="assets/js/app.js?v=9" defer></script>
+</head>
+<body data-page="performance">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="topbar">
+      <div class="wrap topbar-inner">
+        <span class="topbar-league"><span class="topbar-dot"></span>LALIGA · 2026/27</span>
+        <span class="topbar-note">Independent · real results, real forecasts</span>
+        <span id="data-source-badge" class="topbar-source" title="Metrics, forecasts, results and standings are live pipeline output (football-data.co.uk season file + model exports).">Loading data…</span>
+        <div class="topbar-right">
+          <span class="topbar-round">Record · 7 seasons shown</span>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme">
+            <svg class="icon-moon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.2 9.8A5.7 5.7 0 0 1 6.2 2.8a5.7 5.7 0 1 0 7 7Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            <svg class="icon-sun" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M8 1.2v1.6M8 13.2v1.6M1.2 8h1.6M13.2 8h1.6M3.2 3.2l1.1 1.1M11.7 11.7l1.1 1.1M12.8 3.2l-1.1 1.1M4.3 11.7l-1.1 1.1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <span data-theme-label>Dark</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <p id="data-note" class="data-note" hidden></p>
+    <div class="nav-wrap">
+      <div class="wrap">
+        <nav class="nav" aria-label="Primary">
+          <a class="brand" href="index.html">
+            <span class="brand-badge">
+              <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="8.4" stroke="currentColor" stroke-width="2.2"/><path d="M16 2.8v5.2M16 24v5.2M2.8 16H8M24 16h5.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>
+            </span>
+            <span class="brand-type"><span class="brand-word">Calibra</span><span class="brand-sub">La Liga predictions</span></span>
+          </a>
+          <div class="nav-links">
+            <a class="nav-link" data-nav="home" href="index.html">Matchday</a>
+            <a class="nav-link" data-nav="fixtures" href="fixtures.html">Fixtures</a>
+            <a class="nav-link" data-nav="history" href="history.html">Record</a>
+            <a class="nav-link" data-nav="models" href="models.html">How it works</a>
+            <a class="nav-link" data-nav="performance" href="performance.html">Performance</a>
+          </div>
+          <div class="nav-right">
+            <span class="nav-chip"><span class="live-dot"></span>No live matches</span>
+            <a class="btn btn--primary" href="fixtures.html">Fixture centre</a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="wrap page-head-grid">
+        <div>
+          <div class="section-label">The record</div>
+          <h1>How the predictions<br><span>are doing.</span></h1>
+          <p class="page-lead">Every La Liga match gets a predicted scoreline before kick-off. When the result comes in it is scored — hit or miss — and the tally stays on this page.</p>
+          <p class="page-note">Real results · every forecast kept, the good calls and the bad ones</p>
+        </div>
+        <div class="page-head-stats" aria-label="Performance at a glance">
+          <div class="head-stat"><span>Favourite called right</span><strong data-stat="accuracy">—</strong><small>of matches</small></div>
+          <div class="head-stat"><span>Bookmaker, same matches</span><strong data-stat="market-accuracy">—</strong><small>closing prices</small></div>
+          <div class="head-stat"><span>Matches scored</span><strong data-stat="matches">—</strong><small>held-out sample</small></div>
+          <div class="head-stat"><span>Seasons</span><strong data-stat="seasons">—</strong><small>2014/15 onwards</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--surface" aria-labelledby="live-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-label">This season</div>
+            <h2 id="live-title">The record being built now.</h2>
+            <p>Predictions for the current season are locked in before kick-off and scored as results arrive. It starts empty in August and grows every matchweek.</p>
+          </div>
+          <span class="tag" id="live-tag">— matches</span>
+        </div>
+        <div class="metric-tiles" id="live-tiles"></div>
+        <p class="page-note" id="live-note"></p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="season-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-label">Accuracy</div>
+            <h2 id="season-title">How often the favourite won.</h2>
+            <p>The simplest question a fan asks: did the prediction pick the winner? Higher is better. Each point is one season of matches the forecast had never seen.</p>
+          </div>
+          <span class="tag"><span data-stat="matches">—</span> matches</span>
+        </div>
+
+        <div class="metric-bar">
+          <div class="metric-tabs" role="tablist" aria-label="Performance metric">
+            <button type="button" role="tab" id="metric-tab-accuracy" data-metric="accuracy" aria-selected="true" aria-controls="metric-chart-panel">Accuracy</button>
+            <button type="button" role="tab" id="metric-tab-rps" data-metric="rps" aria-selected="false" aria-controls="metric-chart-panel" tabindex="-1">Score (RPS)</button>
+            <button type="button" role="tab" id="metric-tab-logloss" data-metric="logloss" aria-selected="false" aria-controls="metric-chart-panel" tabindex="-1">Log loss</button>
+          </div>
+          <span id="metric-note">Higher is better · held-out seasons</span>
+        </div>
+
+        <div class="chart-panel" id="metric-chart-panel" role="tabpanel" aria-labelledby="metric-tab-accuracy" tabindex="0">
+          <div class="chart-head">
+            <div>
+              <h2 id="chart-title">Outcome accuracy</h2>
+              <p id="chart-sub">Season by season · higher is better</p>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-key">Calibra</span>
+              <span class="legend-key legend-key--market">Bookmaker</span>
+            </div>
+          </div>
+          <div class="chart-svg" id="metric-chart" role="img" aria-label="Season-by-season comparison chart"></div>
+          <div class="chart-caption">
+            <span id="chart-caption">Source: held-out test set</span>
+            <span>Held-out seasons · bookmaker closing prices for comparison</span>
+          </div>
+          <div class="sr-only" id="chart-table"></div>
+        </div>
+
+        <p class="page-note" style="margin-top:18px">RPS and log loss score the whole prediction — the confidence as well as the winner — so they are a fairer test than accuracy alone. They are folded away in the technical section below.</p>
+      </div>
+    </section>
+
+    <section class="section section--surface" aria-labelledby="market-title">
+      <div class="wrap">
+        <div class="model-section-head">
+          <div>
+            <div class="section-label">Against the bookmaker</div>
+            <h2 id="market-title">Close. Not ahead.</h2>
+            <p>The bookmaker's closing prices are the hardest benchmark in football: they already know the team news. Calibra has never beaten them, and this page says so on every season it can.</p>
+          </div>
+          <span class="tag">Benchmark</span>
+        </div>
+
+        <div class="league-grid">
+          <div class="season-table-wrap">
+            <table class="season-table">
+              <caption class="sr-only">RPS by season, Calibra against the bookmaker's closing prices</caption>
+              <thead><tr><th scope="col">Season</th><th scope="col">Calibra RPS</th><th scope="col">Bookmaker RPS</th><th scope="col">Gap</th></tr></thead>
+              <tbody id="season-body"></tbody>
+            </table>
+          </div>
+          <div class="benchmark-card on-inverse">
+            <div class="section-label">The gap</div>
+            <h2>Behind the<br>bookmaker.</h2>
+            <p>Lower RPS is better. Calibra stays within a few hundredths of the closing market, which makes it useful and readable — but it does not beat it.</p>
+            <div id="benchmark-rows"></div>
+            <a class="text-link text-link--light" href="models.html">How the predictions are made
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="model-section">
+          <div class="model-section-head">
+            <div>
+              <div class="section-label">Where it goes wrong</div>
+              <h2>The misses, by type.</h2>
+              <p>Three patterns that survive the overall score. Knowing them is more useful than a single headline number.</p>
+            </div>
+          </div>
+          <div class="weak-spots" id="weak-spots"></div>
+        </div>
+
+        <div class="sample-strip">
+          <span id="sample-size"><strong>Sample</strong> held-out matches</span>
+          <span id="sample-seasons"><strong>Seasons</strong> loading…</span>
+          <span id="sample-metrics"><strong>Metrics</strong> RPS, log loss, accuracy, calibration</span>
+          <span id="sample-status"><strong>Status</strong> Real held-out test output</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="advanced-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-label">Technical detail</div>
+            <h2 id="advanced-title">The scoring rules.</h2>
+            <p>Optional. Accuracy only says whether the winner was right; these numbers also judge how confident the prediction was.</p>
+          </div>
+        </div>
+
+        <div class="accordion">
+          <details>
+            <summary>Headline metrics across every held-out season</summary>
+            <div class="accordion-body">
+              <div class="metric-tiles" id="metric-tiles"></div>
+            </div>
+          </details>
+          <details>
+            <summary>Calibration: does 70% mean 70%?</summary>
+            <div class="accordion-body">
+              <p>A forecast that says 70% should happen about seven times in ten. Each point groups predictions into a band: across the bottom is what the model said, up the side is what actually happened. The dashed line is a perfectly calibrated forecaster.</p>
+              <div class="calibration-chart" id="calibration-chart" role="img" aria-label="Calibration chart: predicted probability against observed frequency. Points sit close to the diagonal, with slight overconfidence in the middle bands."></div>
+              <div class="fact-strip">
+                <span><strong data-stat="calibration">—</strong> mean calibration error</span>
+                <span><strong>9</strong> probability bands</span>
+              </div>
+            </div>
+          </details>
+          <details>
+            <summary>What RPS and log loss actually measure</summary>
+            <div class="accordion-body">
+              <p><strong>RPS (ranked probability score)</strong> scores the full home/draw/away distribution, so it rewards confidence only when the confidence is earned. Lower is better; a coin-flip forecaster scores about 0.24 on this data, Calibra about 0.19 and the bookmaker about 0.189.</p>
+              <p><strong>Log loss</strong> punishes confident mistakes hard. Lower is better. Both are computed on the same held-out matches shown above, with the same code used on the live record.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="index.html">
+            <span class="brand-badge">
+              <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="8.4" stroke="currentColor" stroke-width="2.2"/><path d="M16 2.8v5.2M16 24v5.2M2.8 16H8M24 16h5.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>
+            </span>
+            <span class="brand-type"><span class="brand-word">Calibra</span><span class="brand-sub">La Liga predictions</span></span>
+          </a>
+          <p class="footer-statement">La Liga, matchday by matchday. A predicted scoreline for every fixture, the real results beside them, and a record that keeps its misses.</p>
+        </div>
+        <div class="footer-col">
+          <h2>Matchday</h2>
+          <ul>
+            <li><a href="index.html">Today</a></li>
+            <li><a href="fixtures.html">Fixtures</a></li>
+            <li><a href="index.html#results">Latest results</a></li>
+            <li><a href="index.html#table">League table</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>The record</h2>
+          <ul>
+            <li><a href="performance.html">How the predictions are doing</a></li>
+            <li><a href="models.html">How the predictions are made</a></li>
+            <li><a href="creator.html">Who makes it</a></li>
+            <li><a href="https://github.com/luqmankhan" target="_blank" rel="noopener noreferrer">Source code</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Good to know</h2>
+          <ul>
+            <li>Results from football-data.co.uk</li>
+            <li>Live scores from API-Football</li>
+            <li>Independent, unaffiliated project</li>
+            <li>Not betting advice</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>Calibra is an independent forecast project. Not affiliated with La Liga or any club. Results and odds: football-data.co.uk. Forecasts: this project's Dixon–Coles + CatBoost export. Live scores: API-Football. Club crests are used for identification only; see the attribution file.</p>
+        <p>Vanilla HTML, CSS and JavaScript on a small Node backend. No trackers. <span data-year>2026</span></p>
+      </div>
+      <div class="footer-wordmark" aria-hidden="true"></div>
+    </div>
+  </footer>
+
+  <nav class="mobile-dock" aria-label="Mobile">
+    <a data-nav="home" href="index.html"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 9.5 10 4l7 5.5V17a1 1 0 0 1-1 1h-4v-5H8v5H4a1 1 0 0 1-1-1V9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Matchday</span></a>
+    <a data-nav="fixtures" href="fixtures.html"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 8.5h14M7 3v3M13 3v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Fixtures</span></a><a data-nav="history" href="history.html"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 4h12v12H4zM7 8h6M7 11h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Record</span></a>
+    <a data-nav="models" href="models.html"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m10 3 7 3.5-7 3.5-7-3.5L10 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m3 10 7 3.5 7-3.5M3 13.5 10 17l7-3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>How it works</span></a>
+    <a data-nav="performance" href="performance.html"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16V9M8 16V5M12 16v-4M16 16V7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Stats</span></a>
+  </nav>
+</body>
+</html>

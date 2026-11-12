@@ -1,7 +1,60 @@
 # CURRENT_STATE — verified state of the project
 
-Last full verification: **2026-11-07**, on the Home hero checkpoint.
-Everything below was checked against the running app, not inferred from code.
+Last full verification: **2026-11-12** (static site `web/`), and **2026-11-07**
+for the legacy Next.js record below.
+
+---
+
+## 0. Current: `web/` static site (live pipeline data)
+
+`web/` is the main site (vanilla HTML/CSS/JS). The old Next.js site is
+preserved untouched in `web-classic/`. Everything below was verified in a real
+browser (Chromium via Playwright) against `python3 -m http.server 4173`,
+fresh loads, 0 console errors on all 7 pages.
+
+**All data is real. No mock fixtures are rendered anywhere.**
+
+- **Forecasts**: `data/website/upcoming_predictions.csv` — 9 La Liga fixtures,
+  Matchweek 12 (Nov 7–8, 2026), blend + Dixon-Coles + CatBoost probabilities
+  and the top scoreline per match.
+- **Results**: `data/website/season_results.csv` — 109 real 2026/27 matches
+  (Matchweeks 1–11) exported from `data/raw/SP1_2627.csv`
+  (football-data.co.uk) by `scripts/export_site_data.py`: real scores, real
+  match xG, real B365 closing odds, honest matchweek numbers.
+- **Standings / form**: computed in-browser from the real results
+  (`web/assets/js/app.js`, `applyLiveOverride()`).
+- **Metrics**: `reports/test_metrics_final.csv` +
+  `reports/per_season_metrics_final.csv` — blend RPS 0.193 vs market 0.189,
+  log loss 0.966, accuracy 53.3%; per-season record 2014/15 → 2025/26.
+
+Page by page:
+
+| Page | What it shows |
+|---|---|
+| Home | Next forecast (Málaga–Racing Santander), real results grid, real standings + form, per-season RPS chart |
+| Fixtures | 118 real fixtures (109 settled + 9 forecast), working search/filters, MW options rebuilt from data, kickoff times "TBC" where the export has none |
+| Match (upcoming) | Blend 1X2, top scoreline, DC/Cat disagreement, real standings comparison |
+| Match (settled) | Final score, real match xG, de-vigged closing market labelled as reference (never as a model forecast) |
+| Models | Real per-model RPS/log loss/accuracy/calibration |
+| Performance | Real held-out metrics, per-season chart, calibration, weak spots |
+| About / Creator | Copy updated to describe the live pipeline honestly |
+
+Team registry now matches the real 2026/27 roster (Málaga, Racing Santander,
+Deportivo La Coruña added; Girona/Mallorca/Oviedo removed). The three new
+teams use `assets/crests/generic.svg`.
+
+Script tags carry `?v=2` cache-busting. If a page ever looks stale,
+hard-refresh once — the version key forces a re-fetch.
+
+Re-run the results export with: `python3 scripts/export_site_data.py`
+(stdlib only; the forecast export needs `.venv/bin/python src/export_website.py`).
+
+---
+
+## 1. Legacy record — Next.js site (now `web-classic/`)
+
+Previous full verification: **2026-11-07**, on the Home hero checkpoint.
+Everything below was checked against the running app at the time, not inferred from code.
 
 ---
 
@@ -140,3 +193,174 @@ Fixtures page, match detail page, models page, FastAPI, calibration chart,
 per-season comparisons, GSAP/Lenis scroll scenes, full accessibility audit,
 Lighthouse, deployment. The modelling pipeline and exported data were not
 modified.
+
+---
+
+## UPDATE 2026-11-07 — full website
+
+All six routes are built and verified in a real browser (Chrome 155 via
+Playwright), desktop 1440×900 and mobile 390×844.
+
+| Route | Kind | Content |
+|---|---|---|
+| `/` | partial prerender | existing hero + "also in this snapshot" strip + real nav |
+| `/fixtures` | dynamic | 9 exported fixtures, day filter, 4 sort modes, crests, top score, H/D/A |
+| `/match/[slug]` | dynamic | upcoming: blend, DC/CB, top score, honest "grid not exported" state. Historical: full 15×15 grid, top-5, actual result, per-model RPS |
+| `/models` | static | Dixon-Coles, CatBoost features, 65/35 blend, full weight sweep, test metrics |
+| `/performance` | static | metrics vs market, calibration curve, per-season RPS, paired bootstrap, odds segments, sample matches |
+| `/about` | static | data, protocol, metrics, limits, disclaimer |
+
+Verified: `tsc --noEmit` 0, `npm run build` 0, 0 console errors, 0 failed
+requests, 0 horizontal overflow at 390px, 9 fixture rows, all 18 crests
+loaded, sorting and day filtering change the rendered list. Values were
+asserted against the CSVs (Espanyol 45.3/28.8/25.9, historical Villarreal
+40.6/24.8/34.6, market 0.1888 vs blend 0.1929).
+
+### New derived artefact
+
+`data/website/test_scorelines_grid.json` — a read-only view of the existing
+`test_scorelines.parquet`: 1,140 matches, all 225 cells each, at the parquet's
+exact float precision, 5.5 MB. Verified cell-for-cell against the parquet:
+0 values altered, 0 missing, per-match sums identical (max diff 0.0). It exists
+only because the web layer cannot read parquet. It is **not** a model output
+and was not produced by re-running the pipeline.
+
+An earlier draft dropped cells below 0.0005 and rounded to 6 decimals. That
+retained only 99.69% of mass on average (worst 99.465%), i.e. the heatmaps were
+truncated, and it altered ~38.9k cells by <1e-6. Both were unacceptable, so the
+file was regenerated complete and exact. The heatmap is now complete, never
+renormalised; opacity is relative to each match's most likely scoreline.
+
+### Still missing / still blocked
+
+- `upcoming_scorelines.parquet` + `upcoming_scorelines_top5.csv`: the reason
+  upcoming match pages cannot draw a grid. Re-running `src.export_website`
+  would produce them but refits both models — awaiting approval.
+- Model pickles still absent; unused by the website.
+- Snapshot expires after 2026-11-08; pages then show started fixtures and the
+  hero shows its empty state.
+
+---
+
+# 2026-11-12 — Concept becomes the product (Freebuff integration)
+
+Everything above this line describes the previous Next.js site (`web-classic/`).
+It is kept for reference and is no longer the deployed frontend.
+
+## What the site is now
+
+- `web/` — the former `concept/` prototype, now the real frontend (7 pages).
+- `web-classic/` — the old Next.js app, untouched, kept as reference.
+- `server/` — zero-dependency Node service: static files + JSON API + results refresh.
+- `data/`, `reports/` — pipeline artefacts, served read-only under `/data` and `/reports`.
+
+## Data flow
+
+`data/raw/SP1_2627.csv` + `data/raw/schedule_2627.json`
+→ `scripts/refresh_pipeline.py --results --fixtures --site --predict`
+→ `data/website/season_results.csv`, `data/raw/fixtures.csv`, `data/website/upcoming_predictions.csv`
+→ `server/lib/data.mjs` (`buildPayload`) merges results, forecasts, schedule and the live feed
+→ `/api/bootstrap.js` (blocking first paint) and `/api/fixtures` (polling)
+→ `web/assets/js/data-live.js` → `web/assets/js/app.js` renders the 7 pages.
+
+Standings, form, metrics, calibration and model comparison are derived server-side only.
+
+## Sources
+
+| data | source | notes |
+| --- | --- | --- |
+| Results + closing odds | football-data.co.uk `SP1_2627.csv` | next-day update; 119 played matches through MW12 |
+| Calendar | openfootball `2026-27/es.1.json` | 380 fixtures; many kick-off times TBC |
+| Live + same-day results | API-Football | free plan: 100 req/day, `live=all` + `date=today±1`, no 2026 season |
+| Forecasts | project pipeline (`export_live`) | 260 forecasts, MW13–38, methodology unchanged |
+
+## Run
+
+```sh
+PORT=4173 node server/index.mjs           # http://127.0.0.1:4173/
+node scripts/check_site_data.mjs          # payload invariants
+.venv/bin/python -m pytest tests -q       # 34 pipeline tests
+```
+
+## Model status
+
+Untouched. Dixon-Coles (xi=0.001) × CatBoost, fixed 65/35 blend, market as
+benchmark only, same walk-forward evaluation. Held-out numbers served by the API:
+blend RPS 0.19293 vs market 0.18877, log loss 0.96606, accuracy 53.33%,
+calibration error 1.85% (market 2.15%), n = 1,140 across 12 seasons.
+
+## Verified on this date
+
+- 7 pages + archive render from real payloads, 0 console errors, 0 failed requests.
+- Fixtures page: 379 rows (119 results, 260 upcoming), search, matchweek and
+  status filters, counts and URL state all driven by real data.
+- Match pages for an upcoming fixture and a settled one: real probabilities, most
+  likely scoreline, actual xG, de-vigged market reference, 404 state for unknown ids.
+- Metrics/models/calibration pages read the exported reports, not constants.
+- Payload checker: 0 failures, 0 warnings. Python suite: 34 passed.
+
+## Not verified / known gaps
+
+- No live match was in play during the session, so the live-score path and the
+  provider reconciliation of a freshly finished match were not exercised end to end.
+- Scoreline grids exist for the historical test period only; upcoming match pages
+  hide the interactive field instead of inventing one.
+- Mobile verified at 390 px on every page (no horizontal overflow); no assistive
+  technology pass was run.
+- Sitemap deliberately removed until a production origin exists.
+
+---
+
+# 2026-11-12 (later) — Prediction ledger, verdicts and served grids
+
+Approved design: three-layer learning with the model protected. Implemented the
+tracking layer; the model itself is untouched.
+
+## What was added
+
+- `server/lib/db.mjs` — SQLite ledger (`data/calibra.db`, built-in `node:sqlite`).
+  `forecasts` is write-once (UPDATE/DELETE blocked by trigger) and stores the
+  blend, DC and CatBoost probabilities, top scoreline, export timestamp and a
+  model fingerprint. `results` is correctable, with `result_revisions` auditing
+  every change. RPS / log loss / accuracy / calibration are computed on read with
+  the same maths as the locked evaluation.
+- `server/lib/ledger-sync.mjs` + `scripts/sync_ledger.mjs` — import the exports
+  into the ledger. Joined on `season|home|away`, so a rescheduled fixture still
+  finds its own forecast.
+- `server/app.mjs` — `/api/ledger`; provider-confirmed results are now persisted
+  to `data/raw/api_results_2627.json` instead of living only in memory.
+- `server/index.mjs` — ledger sync on boot and after every results refresh.
+- `scripts/export_scorelines_json.py` + `scripts/build_scoreline_files.mjs` — the
+  existing parquet grids converted to one JSON file per fixture (conversion only,
+  no refit). The match page now renders the real 225-cell field.
+- `scripts/learning_report.mjs` — mistake patterns (calibration bias, goals
+  buckets, confidence buckets, per-team bias, matchweek drift) → `reports/live_learning.md`.
+  Insights only; it changes nothing.
+- `tests/live_flow.test.mjs` — 9 `node:test` cases over simulated provider
+  payloads: live merge, stale/error fallback, immutability, idempotent result
+  updates, score corrections with revision history, late-forecast exclusion,
+  provider-sourced results, grid integrity.
+- Fixture centre now opens on the next matchweek; result rows and match pages
+  show the archived model call and verdict once one exists.
+
+## Evidence
+
+- Ledger: 260 forecasts recorded, 119 results imported, 0 settled (results all
+  predate the ledger). `/api/ledger` reports the same counts.
+- Maths check: computing RPS/log loss/accuracy from `test_predictions.csv` with
+  the ledger functions reproduces the locked report exactly (0.19293 / 0.96606 /
+  53.33%, market 0.18877).
+- Tests: `node --test tests/live_flow.test.mjs` 9/9 pass; payload checker passes;
+  Python suite 34/34.
+- Browser: fixtures opens on MW13 (10 rows), match page renders 225 grid cells
+  and the 5-item scoreline list, performance page shows the separate season
+  record at 0 settled, no console errors, no overflow at 390 px.
+
+## Still not proven
+
+- No live La Liga match was observed end to end. Live rendering and automatic
+  settlement are proven against simulated payloads only.
+- The record is empty until MW13 is played, so the season-metrics path has not
+  run on real settled forecasts.
+- Nothing schedules `--predict`; the refit is still manual and unversioned per run
+  (the ledger records a model fingerprint, so forecasts can be traced).

@@ -1,0 +1,27 @@
+{
+  "season": "2026/27",
+  "generatedAt": "2026-11-12T07:32:20.874Z",
+  "sample": 0,
+  "record": {
+    "matches": 0,
+    "rps": null,
+    "logLoss": null,
+    "accuracy": null,
+    "calibration": null,
+    "market": null,
+    "byMatchweek": [],
+    "scorelines": null
+  },
+  "calibration": {
+    "meanProbabilityOnActual": null,
+    "meanProbabilityOnHome": null,
+    "actualHomeRate": null,
+    "actualDrawRate": null,
+    "actualAwayRate": null
+  },
+  "goals": [],
+  "confidence": [],
+  "matchweeks": [],
+  "teams": [],
+  "insights": []
+}

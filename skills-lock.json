@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "audit-website": {
+      "source": "squirrelscan/skills",
+      "sourceType": "github",
+      "skillPath": "skills/audit-website/SKILL.md",
+      "computedHash": "2b702605e3ba76fce3eb47b5b304e6bb213d54831f45dfb0b32badd24fd428c0"
+    }
+  }
+}

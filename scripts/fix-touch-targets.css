@@ -1,0 +1,22 @@
+/* Mobile touch target fixes - add to @media (max-width: 900px) block */
+
+.segmented button { min-height: 44px; min-width: 44px; }
+.select-wrap select { min-height: 44px; }
+.input-wrap input, .search input { min-height: 44px; }
+.nav-link { min-height: 44px; }
+.theme-toggle { min-height: 44px; min-width: 44px; }
+.brand { min-height: 44px; align-items: center; }
+.skip-link { min-height: 44px; display: flex; align-items: center; }
+
+/* Status filter buttons */
+#status-filter .segmented button { min-height: 44px; }
+
+/* Tab buttons (models, performance) */
+.tabs button, .metric-tabs button, [role="tab"] { min-height: 44px; min-width: 44px; }
+
+/* Match centre buttons */
+.match-score, .match-status { min-height: 44px; }
+
+/* Footer links */
+.footer-grid a, .footer-nav a { min-height: 44px; display: inline-flex; align-items: center; }
+

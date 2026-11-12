@@ -4,8 +4,87 @@ data/processed/
 __pycache__/
 *.pyc
 
+# secrets — never committed (no env file is served over HTTP either)
+.env
+.env.*
+!.env.example
+
 # generated / tooling artefacts
 catboost_info/
 .pytest_cache/
 .playwright-mcp/
 .DS_Store
+
+# Database
+data/calibra.db
+data/calibra.db-*
+data/calibra-sim-*.db
+
+# Node
+node_modules/
+
+# Generated screenshots & reports
+screenshots/
+reports/lighthouse/
+reports/squirrel-*.md
+qa-*.png
+ev-*.png
+fin-*.png
+fresh-*.png
+np-*.png
+tab-*.png
+tab2-*.png
+tab3-*.png
+tabf-*.png
+v-*.png
+act-*.png
+exp-*.png
+design-check/
+zoom-filter-*.png
+hash-index.png
+graphify-out/
+
+# Large data files
+data/website/*.parquet
+data/website/*.json
+data/website/*.csv
+data/website/models/
+data/website/scorelines/
+
+# IDE / agent dirs
+.agents/
+.web-ide/
+.idea/
+.vscode/
+
+# Build outputs
+web/.next/
+web-classic/
+web/qa-final/
+web/shots/
+web/screenshots/
+web/archive/
+
+# Test artefacts
+tests/integrity.mjs
+tests/interaction_test.mjs
+scripts/debug-*.mjs
+scripts/fix-*.mjs
+scripts/comprehensive-design-audit.mjs
+scripts/accurate-design-audit.mjs
+scripts/final-design-audit.mjs
+scripts/multi-framework-audit.mjs
+scripts/verify-mobile-nav.mjs
+scripts/mobile-snapshot.mjs
+scripts/debug-*.mjs
+
+# Reports (keep final report)
+reports/FINAL_COMPREHENSIVE_REPORT.md
+!reports/lighthouse/
+!reports/squirrel-*.md
+
+# FreeBuff handoff
+FREE_BUFF_HANDOFF.md
+
+# Logs
+*.log

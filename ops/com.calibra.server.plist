@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  launchd supervisor for the Calibra server (macOS).
+
+  Install:
+    cp ops/com.calibra.server.plist ~/Library/LaunchAgents/
+    launchctl load -w ~/Library/LaunchAgents/com.calibra.server.plist
+
+  Replace YOUR_USERNAME (or edit the paths) first. KeepAlive restarts the
+  process after a crash; RunAtLoad starts it after login/boot. Logs go to
+  ~/Library/Logs/calibra/ and rotate at 5 MB.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.calibra.server</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/local/bin/node</string>
+    <string>/Users/YOUR_USERNAME/Projects/Football-score-predictor/server/index.mjs</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/YOUR_USERNAME/Projects/Football-score-predictor</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PORT</key>
+    <string>4173</string>
+    <key>HOST</key>
+    <string>127.0.0.1</string>
+    <key>RESULTS_REFRESH_MIN</key>
+    <string>30</string>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <dict>
+    <key>SuccessfulExit</key>
+    <false/>
+  </dict>
+  <key>ThrottleInterval</key>
+  <integer>10</integer>
+
+  <key>StandardOutPath</key>
+  <string>/Users/YOUR_USERNAME/Library/Logs/calibra/server.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/YOUR_USERNAME/Library/Logs/calibra/server.err.log</string>
+</dict>
+</plist>
