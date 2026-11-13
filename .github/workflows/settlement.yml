@@ -1,0 +1,61 @@
+name: settlement
+
+on:
+  schedule:
+    - cron: "2,12,22,32,42,52 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: settlement
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  settle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Seed provider budget
+        run: |
+          R=$(node -e 'try{const h=require("./web/api/health.json");const v=h.quota&&h.quota.remaining;if(typeof v==="number")process.stdout.write(String(v))}catch{}')
+          if [ -n "$R" ]; then echo "PROVIDER_REMAINING=$R" >> "$GITHUB_ENV"; fi
+
+      - name: Live window guard
+        id: win
+        run: echo "state=$(node scripts/live_window.mjs)" >> "$GITHUB_OUTPUT"
+
+      - name: Refresh results (football-data, no key)
+        run: python3 scripts/refresh_pipeline.py --results --fixtures --no-ledger
+
+      - name: Sync ledger
+        run: node scripts/sync_ledger.mjs
+
+      - name: Verify
+        run: |
+          node scripts/check_site_data.mjs
+          node scripts/real_match_verify.mjs
+
+      - name: Publish snapshot
+        run: node scripts/publish_snapshot.mjs
+
+      - name: Checkpoint WAL
+        run: sqlite3 data/calibra.db "PRAGMA wal_checkpoint(TRUNCATE);"
+
+      - name: Commit if changed
+        run: |
+          git config user.name "calibra-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add data/calibra.db web/api web/data
+          if git diff --cached --quiet; then
+            echo "no change"
+            exit 0
+          fi
+          git commit -m "chore: settlement snapshot"
+          git push
+

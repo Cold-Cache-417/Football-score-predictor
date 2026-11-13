@@ -1,0 +1,51 @@
+# Build detection — must not look like a Next.js app
+web/package.json
+web/package-lock.json
+web/next.config.ts
+web/tsconfig.json
+web/eslint.config.mjs
+web/components.json
+web/.next/
+web/src/
+web/public/
+
+# Internal artifacts inside web/
+web/screenshots/
+web/shots/
+web/qa-final/
+web/archive/
+web/AGENTS.md
+web/README.md
+
+# Repository directories — never deployed
+src/
+ops/
+concept/
+app/
+catboost_info/
+design-check/
+graphify-out/
+web-classic/
+screenshots/
+reports/
+server/
+tests/
+scripts/
+baseline/
+.venv/
+.git/
+.env
+.env.*
+*.md
+
+# Data — never deployed (the ledger is committed, not served)
+data/raw/
+data/processed/
+data/calibra.db
+data/calibra.db-wal
+data/calibra.db-shm
+data/website/*.parquet
+data/website/*.csv
+data/website/models/
+data/website/test_*
+data/website/upcoming_*

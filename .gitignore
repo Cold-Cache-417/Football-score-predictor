@@ -15,9 +15,10 @@ catboost_info/
 .playwright-mcp/
 .DS_Store
 
-# Database
-data/calibra.db
-data/calibra.db-*
+# Database — the ledger is committed (audited public football data);
+# its WAL/SHM sidecars never are.
+data/calibra.db-wal
+data/calibra.db-shm
 data/calibra-sim-*.db
 
 # Node
@@ -85,6 +86,14 @@ reports/FINAL_COMPREHENSIVE_REPORT.md
 
 # FreeBuff handoff
 FREE_BUFF_HANDOFF.md
+
+# Published site artifacts — MUST stay tracked (served by Vercel).
+# These are validated, public-safe exports. The raw DB below is never committed.
+!web/api/
+!web/api/*.json
+!web/api/bootstrap.js
+!web/data/website/scorelines/
+!web/data/website/scorelines/*.json
 
 # Logs
 *.log

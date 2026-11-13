@@ -268,6 +268,7 @@ def main() -> None:
     parser.add_argument("--fixtures", action="store_true", help="refresh schedule + fixtures only")
     parser.add_argument("--predict", action="store_true", help="re-run the live prediction export")
     parser.add_argument("--skip-download", action="store_true", help="use cached raw files")
+    parser.add_argument("--no-ledger", action="store_true", help="skip parquet grid conversion (needs pandas; CI commits grids instead)")
     args = parser.parse_args()
 
     everything = not (args.results or args.fixtures or args.predict)
@@ -294,7 +295,7 @@ def main() -> None:
         print("predictions")
         run_predictions()
 
-    if do_results or args.predict:
+    if (do_results or args.predict) and not args.no_ledger:
         print("ledger")
         run_ledger_steps()
 

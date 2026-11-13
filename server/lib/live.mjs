@@ -26,6 +26,10 @@ const QUOTA_FILE = path.join(
   "../../data/raw/provider_quota.json"
 );
 let cooldownUntil = 0;
+const PROVIDER_RESERVE = Number(process.env.PROVIDER_RESERVE ?? 25);
+let lastRemaining = Number.isFinite(Number(process.env.PROVIDER_REMAINING)) && process.env.PROVIDER_REMAINING !== ""
+  ? Number(process.env.PROVIDER_REMAINING)
+  : null;
 
 function dayKey() {
   return new Date().toISOString().slice(0, 10);
@@ -56,8 +60,24 @@ export function quotaStatus() {
     used: quota.count,
     limit: DAILY_LIMIT,
     remaining: Math.max(0, DAILY_LIMIT - quota.count),
-    coolingDownUntil: cooldownUntil > Date.now() ? new Date(cooldownUntil).toISOString() : null
+    coolingDownUntil: cooldownUntil > Date.now() ? new Date(cooldownUntil).toISOString() : null,
+    providerRemaining: lastRemaining,
+    reserve: PROVIDER_RESERVE
   };
+}
+
+/* Provider-reported budget. `blocked` is what the call gate enforces. */
+export function budgetStatus() {
+  return {
+    remaining: lastRemaining,
+    reserve: PROVIDER_RESERVE,
+    blocked: lastRemaining !== null && lastRemaining < PROVIDER_RESERVE
+  };
+}
+
+/* Test seam: lets the quota gate be exercised without a network call. */
+export function setProviderRemaining(value) {
+  lastRemaining = value;
 }
 
 const LIVE_TTL_MS = 120_000;
@@ -81,6 +101,11 @@ async function call(path, params) {
   if (quota.count >= DAILY_LIMIT) {
     return { error: `daily provider quota exhausted (${quota.count}/${DAILY_LIMIT})` };
   }
+  /* The provider's own counter is authoritative and survives ephemeral runners.
+     Keep a reserve so a scheduled poll can never strand a manual run. */
+  if (lastRemaining !== null && lastRemaining < PROVIDER_RESERVE) {
+    return { error: `provider budget reserve reached (${lastRemaining} < ${PROVIDER_RESERVE})` };
+  }
   quota.count += 1;
   writeQuota(quota);
 
@@ -99,6 +124,14 @@ async function call(path, params) {
   if (response.status === 429) {
     cooldownUntil = Date.now() + 15 * 60 * 1000;
     return { error: "rate limit reached" };
+  }
+  const remaining = response.headers.get("x-ratelimit-requests-remaining");
+  if (remaining !== null && remaining !== "" && Number.isFinite(Number(remaining))) {
+    lastRemaining = Number(remaining);
+  } else {
+    /* Fail closed: one unreadable header spends this process's whole budget,
+       so a missing counter can never silently drain the daily allowance. */
+    lastRemaining = 0;
   }
   if (!response.ok) return { error: `HTTP ${response.status}` };
   let payload;

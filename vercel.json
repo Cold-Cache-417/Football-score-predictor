@@ -1,0 +1,31 @@
+{
+  "framework": null,
+  "buildCommand": "",
+  "outputDirectory": "web",
+  "rewrites": [
+    { "source": "/api/fixtures", "destination": "/api/fixtures.json" },
+    { "source": "/api/ledger", "destination": "/api/ledger.json" },
+    { "source": "/api/live", "destination": "/api/live.json" },
+    { "source": "/api/health", "destination": "/api/health.json" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'"
+        },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    }
+  ]
+}
