@@ -97,3 +97,5 @@ FREE_BUFF_HANDOFF.md
 
 # Logs
 *.log
+.vercel
+.env*
