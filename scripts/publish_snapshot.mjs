@@ -25,11 +25,43 @@ const failures = [];
 const fail = (m) => failures.push(m);
 const SECRET_RX = /api[_-]?key|secret|bearer|password|passwd|credential|\/Users\/|BEGIN PRIVATE|ssh-rsa/i;
 
+const VOLATILE_KEYS = new Set([
+  "generatedAt",
+  "resultsUpdatedAt",
+  "predictionsUpdatedAt",
+  "scheduleUpdatedAt",
+  "live"
+]);
+
+function stableJson(value) {
+  const sort = (v) => {
+    if (Array.isArray(v)) return v.map(sort);
+    if (v && typeof v === "object") {
+      const out = {};
+      for (const key of Object.keys(v).sort()) {
+        if (VOLATILE_KEYS.has(key)) continue;
+        out[key] = sort(v[key]);
+      }
+      return out;
+    }
+    return v;
+  };
+  return JSON.stringify(sort(value));
+}
+
 function writeJson(file, value) {
   const body = JSON.stringify(value);
   const hit = body.match(SECRET_RX);
   if (hit) fail(`${path.relative(ROOT, file)}: secret-like token "${hit[0]}"`);
   fs.mkdirSync(path.dirname(file), { recursive: true });
+  /* Keep the existing bytes when only volatile timestamps differ, so an
+     idempotent rerun produces no commit and no deploy. */
+  if (fs.existsSync(file)) {
+    try {
+      const previous = JSON.parse(fs.readFileSync(file, "utf8"));
+      if (stableJson(previous) === stableJson(value)) return fs.statSync(file).size;
+    } catch { /* fall through and rewrite */ }
+  }
   fs.writeFileSync(file, body);
   return body.length;
 }
@@ -99,16 +131,29 @@ sizes["health.json"] = writeJson(path.join(OUT, "health.json"), {
   }
 });
 
-sizes["live.json"] = writeJson(path.join(OUT, "live.json"), {
-  state: process.env.FOOTBALL_API_KEY ? "idle" : "unconfigured",
-  matches: [],
-  updatedAt: null,
-  message: "Static snapshot. Live polling runs in GitHub Actions."
-});
+if (!fs.existsSync(path.join(OUT, "live.json"))) {
+  sizes["live.json"] = writeJson(path.join(OUT, "live.json"), {
+    state: "unconfigured",
+    matches: [],
+    updatedAt: null,
+    message: "Static snapshot. Live polling runs in GitHub Actions."
+  });
+}
 
-const boot = `/* generated ${generatedAt} from the ledger; public data only */\nwindow.CALIBRA_BOOTSTRAP = ${JSON.stringify(payload)};\n`;
+const bootPath = path.join(OUT, "bootstrap.js");
+let boot;
+let previousBoot = null;
+try {
+  const raw = fs.readFileSync(bootPath, "utf8");
+  previousBoot = JSON.parse(raw.slice(raw.indexOf("{"), raw.lastIndexOf("}") + 1));
+} catch { /* no previous bootstrap */ }
+if (previousBoot && stableJson(previousBoot) === stableJson(payload)) {
+  boot = fs.readFileSync(bootPath, "utf8");
+} else {
+  boot = `/* generated ${generatedAt} from the ledger; public data only */\nwindow.CALIBRA_BOOTSTRAP = ${JSON.stringify(payload)};\n`;
+  fs.writeFileSync(bootPath, boot);
+}
 if (SECRET_RX.test(boot)) fail("bootstrap.js: secret-like token");
-fs.writeFileSync(path.join(OUT, "bootstrap.js"), boot);
 sizes["bootstrap.js"] = boot.length;
 
 const gridCount = copyGrids();
