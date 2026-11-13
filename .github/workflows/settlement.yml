@@ -44,6 +44,11 @@ jobs:
       - name: Publish snapshot
         run: node scripts/publish_snapshot.mjs
 
+      - name: Live snapshot (window-guarded)
+        env:
+          FOOTBALL_API_KEY: ${{ secrets.FOOTBALL_API_KEY }}
+        run: node scripts/live_snapshot.mjs
+
       - name: Checkpoint WAL
         run: sqlite3 data/calibra.db "PRAGMA wal_checkpoint(TRUNCATE);"
 
