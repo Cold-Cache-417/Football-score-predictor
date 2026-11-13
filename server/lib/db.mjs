@@ -189,7 +189,17 @@ export function recordResult(db, row, now = new Date().toISOString()) {
 
   const sameScore = existing.home_goals === row.homeGoals && existing.away_goals === row.awayGoals;
   if (sameScore) {
-    // Same score: only refresh the source/market if they were missing.
+    /* Same score: refresh only what is genuinely missing or different. A rerun
+       with identical data must be a true no-op so the workflow produces no
+       commit and no deploy. */
+    const needsMarket =
+      (existing.market_p_h == null && row.marketH != null) ||
+      (existing.market_p_d == null && row.marketD != null) ||
+      (existing.market_p_a == null && row.marketA != null);
+    const needsSource = row.source != null && existing.source !== row.source;
+    if (!needsMarket && !needsSource) {
+      return { status: "unchanged", revision: existing.revision };
+    }
     db.prepare(`
       UPDATE results SET updated_at = ?,
         market_p_h = COALESCE(market_p_h, ?), market_p_d = COALESCE(market_p_d, ?),
