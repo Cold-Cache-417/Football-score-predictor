@@ -36,7 +36,12 @@ function writeJson(file, value) {
 
 function copyGrids() {
   if (!fs.existsSync(GRIDS_IN)) {
-    fail(`scorelines missing: ${GRIDS_IN} — run scripts/build_scoreline_files.mjs`);
+    /* CI has no parquet source: the committed grids are the published state. */
+    const existing = fs.existsSync(GRIDS_OUT)
+      ? fs.readdirSync(GRIDS_OUT).filter((f) => f.endsWith(".json")).length
+      : 0;
+    if (existing === 260) return existing;
+    fail(`scorelines missing: ${GRIDS_IN} and only ${existing}/260 committed`);
     return 0;
   }
   const files = fs.readdirSync(GRIDS_IN).filter((f) => f.endsWith(".json"));
