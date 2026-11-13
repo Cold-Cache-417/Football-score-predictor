@@ -2227,10 +2227,10 @@ svg {
 .filter-bar {
   position: sticky;
   top: var(--nav-h);
-  z-index: 90;
+  z-index: 200;
   padding: 10px 0;
   border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  background: color-mix(in srgb, var(--bg) 95%, transparent);
   backdrop-filter: saturate(1.15) blur(16px);
   -webkit-backdrop-filter: saturate(1.15) blur(16px);
 }
@@ -2355,6 +2355,13 @@ svg {
   border: 1px solid var(--line);
   border-radius: var(--radius-xs);
   background: var(--surface);
+}
+
+/* The native select hides its outline; show focus on the wrapper instead,
+   matching the search field. */
+.select-wrap:focus-within {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 3px var(--coral-soft);
 }
 
 .select-wrap select {
