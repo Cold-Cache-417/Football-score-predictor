@@ -1018,47 +1018,47 @@ svg {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   flex: none;
 }
 
 .brand-badge {
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
   background: var(--coral);
   color: var(--on-coral);
-  box-shadow: 0 5px 14px -8px rgba(226, 61, 49, 0.8);
+  box-shadow: 0 6px 18px -8px rgba(226, 61, 49, 0.9);
 }
 
 .brand-badge svg {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
 }
 
 .brand-type {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
 }
 
 .brand-word {
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 800;
-  line-height: 0.85;
-  letter-spacing: 0.02em;
+  line-height: 0.9;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
 }
 
 .brand-sub {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 500;
   line-height: 1;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
   margin-left: 8px;
@@ -1277,16 +1277,16 @@ svg {
 
 .hero-round-number {
   font-family: var(--font-display);
-  font-size: clamp(54px, 7vw, 82px);
+  font-size: clamp(56px, 8vw, 92px);
   font-weight: 800;
-  line-height: 1;
+  line-height: 0.9;
   letter-spacing: 0;
   color: var(--inv-ink);
 }
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(46px, 7.4vw, 92px);
+  font-size: clamp(56px, 9vw, 112px);
   font-weight: 800;
   line-height: 1;
   letter-spacing: 0.004em;
@@ -1391,7 +1391,7 @@ svg {
 
 .card-top-meta {
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 11px;
   font-weight: 500;
   line-height: 1.3;
   letter-spacing: 0.08em;
@@ -1537,32 +1537,32 @@ svg {
 
 .next-team-name {
   font-family: var(--font-display);
-  font-size: 19px;
+  font-size: 26px;
   font-weight: 700;
   line-height: 0.95;
   text-transform: uppercase;
   color: var(--inv-ink);
   /* Team names arrive with the payload; the longest of them wraps to two
      lines, so hold two lines open instead of growing the card. */
-  min-height: 2.1em;
+  min-height: 2.4em;
   display: flex;
   align-items: flex-end;
 }
 
 .next-team-code {
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 11px;
   font-weight: 500;
   /* Same reason as the name: the code line is empty until the payload
      arrives, so hold its line box open. */
-  min-height: 1.4em;
+  min-height: 1.6em;
   letter-spacing: 0.12em;
   color: var(--inv-muted);
 }
 
 .next-v {
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--inv-faint);
 }
@@ -5255,46 +5255,56 @@ body[data-page="creator"] .section {
   }
 
   .brand-badge {
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
   }
 
   .brand-badge svg {
-    width: 21px;
-    height: 21px;
+    width: 24px;
+    height: 24px;
   }
 
   .brand-word {
-    font-size: 22px;
+    font-size: 28px;
+  }
+
+  .brand-badge {
+    width: 44px;
+    height: 44px;
+  }
+
+  .brand-badge svg {
+    width: 28px;
+    height: 28px;
   }
 
   .nav-right .btn {
     padding: 0 10px;
-    font-size: 10.5px;
+    font-size: 11px;
   }
 
   .hero-topline {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 16px;
     align-items: start;
   }
 
   .hero-round {
     flex-direction: row;
     align-items: baseline;
-    gap: 7px;
+    gap: 9px;
   }
 
   .hero-round-number {
-    font-size: 46px;
+    font-size: 64px;
   }
 
   .hero-title {
-    font-size: clamp(42px, 10vw, 64px);
+    font-size: clamp(64px, 22vw, 80px);
   }
 
   .hero-sub {
-    font-size: 12.5px;
+    font-size: 15px;
   }
 
   .hero-grid {
@@ -5622,11 +5632,11 @@ body[data-page="creator"] .section {
   }
 
   .hero-title {
-    font-size: clamp(38px, 11vw, 52px);
+    font-size: clamp(52px, 14vw, 72px);
   }
 
   .hero-round-number {
-    font-size: 40px;
+    font-size: 52px;
   }
 
   .hero-sub {
@@ -5929,11 +5939,11 @@ body[data-page="creator"] .section {
   }
 
   .brand-word {
-    font-size: 20px;
+    font-size: 28px;
   }
 
   .hero-title {
-    font-size: 36px;
+    font-size: 48px;
   }
 
   .scoreline {
@@ -5941,7 +5951,7 @@ body[data-page="creator"] .section {
   }
 
   .score-team-name {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .score-core {
@@ -5949,7 +5959,7 @@ body[data-page="creator"] .section {
   }
 
   .next-team-name {
-    font-size: 16px;
+    font-size: 22px;
   }
 
   .match-side h2 {
