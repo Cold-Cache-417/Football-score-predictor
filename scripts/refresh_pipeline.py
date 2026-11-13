@@ -94,6 +94,7 @@ def download(url: str, target: str, label: str) -> bool:
     previous = open(target, "rb").read() if os.path.exists(target) else None
     changed = previous != payload
     if changed:
+        os.makedirs(os.path.dirname(target) or ".", exist_ok=True)
         with open(target, "wb") as handle:
             handle.write(payload)
     print(f"  {label}: {len(payload)} bytes, {'updated' if changed else 'unchanged'}")
