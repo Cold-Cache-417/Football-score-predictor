@@ -8,6 +8,11 @@
     { "source": "/api/live", "destination": "/api/live.json" },
     { "source": "/api/health", "destination": "/api/health.json" }
   ],
+  "redirects": [
+    { "source": "/models.html", "destination": "/how-it-works.html", "permanent": true },
+    { "source": "/performance.html", "destination": "/how-it-works.html", "permanent": true },
+    { "source": "/about.html", "destination": "/how-it-works.html", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
