@@ -19,3 +19,4 @@ scikit-learn==1.9.1
 
 # Tests
 pytest==9.2.0
+playwright==1.65.2   # browser-level checks: favourite-label threshold, club page, mobile filters
