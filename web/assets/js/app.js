@@ -169,7 +169,7 @@
   /* Navigation ------------------------------------------------------------- */
   function initNavigation() {
     const page = document.body.dataset.page;
-    const active = page === "match" ? "fixtures" : page;
+    const active = page === "match" || page === "club" ? "fixtures" : page;
     $$("[data-nav]").forEach((link) => {
       if (link.dataset.nav === active) link.setAttribute("aria-current", "page");
     });
@@ -362,7 +362,7 @@
         const gd = row.gd > 0 ? `+${row.gd}` : String(row.gd);
         return `<tr>
           <td class="pos${row.pos <= 4 ? " pos--top" : ""}">${row.pos}</td>
-          <td><span class="table-team">${crest(row.team, "xs")}<span class="table-team-name">${esc(team.name)}</span><small>${esc(team.code)}</small></span></td>
+          <td><a class="table-team" href="club.html?team=${encodeURIComponent(row.team)}">${crest(row.team, "xs")}<span class="table-team-name">${esc(team.name)}</span><small>${esc(team.code)}</small></a></td>
           <td>${row.played}</td>
           <td>${gd}</td>
           <td class="form-cell">${formChips(team.form, `${team.name} form`)}</td>
@@ -1029,6 +1029,87 @@
     holder.hidden = !html;
   }
 
+  /* Club detail ----------------------------------------------------------- */
+  function initClub() {
+    const slug = new URLSearchParams(window.location.search).get("team");
+    const team = slug ? C.teams[slug] : null;
+    const fixturesSection = document.getElementById("club-fixtures");
+    if (!team) {
+      const head = document.getElementById("club-head");
+      const body = document.getElementById("club-body");
+      if (head) head.hidden = true;
+      if (body) body.hidden = true;
+      if (fixturesSection) fixturesSection.hidden = true;
+      const empty = document.getElementById("club-empty");
+      if (empty) empty.hidden = false;
+      document.title = "Unknown club — Calibra";
+      return;
+    }
+
+    const row = C.standings.filter((entry) => entry.team === slug)[0] || null;
+    setHTML("club-title", `${esc(team.name)} <span>${esc(team.code)}</span>`);
+    setText("club-lead", `${team.stadium}, ${team.city}. Every result so far and every fixture still to come, from the same season export the rest of the site uses.`);
+    setText("club-note", row ? `2026/27 · table position as of matchweek ${C.league.currentMatchweek}` : "2026/27 · no settled match for this club in the export yet");
+    setText("club-pos", row ? String(row.pos) : "—");
+    setText("club-points", row ? String(row.points) : "—");
+    setText("club-played", row ? String(row.played) : "—");
+    setText("club-gd", row ? (row.gd > 0 ? `+${row.gd}` : String(row.gd)) : "—");
+    setText("club-gf", row ? String(row.gf) : "—");
+    setText("club-ga", row ? String(row.ga) : "—");
+    setHTML("club-form", team.form ? formChips(team.form, `${team.name} form`) : '<span class="form-empty">No form yet</span>');
+
+    function card(fixture) {
+      const home = C.teams[fixture.home];
+      const away = C.teams[fixture.away];
+      const played = fixture.status === "result";
+      const pick = C.favourite(fixture);
+      const footer = `<span>${pick ? (played ? "" : "Forecast · ") + pickLabel(fixture, pick) + " " + pct(pick.value) : "No forecast archived"}</span>`;
+      const withScore = (side, index) => {
+        const sideTeam = side === "home" ? home : away;
+        const won = played && fixture.score[index] > fixture.score[1 - index];
+        return `<div class="result-team${won ? " result-team--winner" : ""}">${crest(side === "home" ? fixture.home : fixture.away, "xs")}<span>${esc(sideTeam.name)}</span>${played ? `<strong>${fixture.score[index]}</strong>` : ""}</div>`;
+      };
+      return `<a class="result-card" href="match.html?id=${encodeURIComponent(fixture.id)}">
+          <div class="result-top"><span class="result-date">${esc(C.dateShort(fixture.date))}</span><span class="status status--${played ? "ft" : "upcoming"}">${played ? "FT" : fixture.timeTBC ? "TBC" : "Upcoming"}</span></div>
+          ${withScore("home", 0)}
+          ${withScore("away", 1)}
+          <div class="result-foot">${footer}</div>
+        </a>`;
+    }
+
+    const mine = C.fixtures.filter((fixture) => fixture.home === slug || fixture.away === slug);
+    const played = mine.filter((fixture) => fixture.status === "result").sort((a, b) => byDate(b, a));
+    const ahead = mine.filter((fixture) => fixture.status !== "result").sort(byDate);
+
+    function paint(targetId, emptyId, list) {
+      const target = document.getElementById(targetId);
+      const note = document.getElementById(emptyId);
+      if (!target) return;
+      target.innerHTML = list.map(card).join("");
+      if (note) note.hidden = list.length > 0;
+      if (!list.length) target.hidden = true;
+    }
+
+    paint("club-results", "club-results-empty", played.slice(0, 6));
+    paint("club-upcoming", "club-upcoming-empty", ahead.slice(0, 6));
+    if (!played.length) {
+      const heading = document.getElementById("club-results-title");
+      if (heading) heading.textContent = "No results yet.";
+    }
+    if (!ahead.length && fixturesSection) fixturesSection.hidden = true;
+    document.title = `${team.name} — Calibra`;
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.href = `https://calibra-laliga.vercel.app/club.html?team=${encodeURIComponent(slug)}`;
+    const description = document.querySelector('meta[name="description"]');
+    if (description) {
+      description.content = `${team.name} (${team.code}) — La Liga 2026/27 results and predictions from Calibra.`;
+    }
+    C._clubRender = () => {
+      paint("club-results", "club-results-empty", played.slice(0, 6));
+      paint("club-upcoming", "club-upcoming-empty", ahead.slice(0, 6));
+    };
+  }
+
   function initMatch() {
     const body = document.getElementById("match-body");
     const missing = document.getElementById("match-missing");
@@ -1618,8 +1699,11 @@
   if (page === "home") initHome();
   else if (page === "fixtures" || page === "history") initFixtures();
   else if (page === "match") initMatch();
-  else if (page === "models") initModels();
-  else if (page === "performance") initPerformance();
+  else if (page === "club") initClub();
+  else if (page === "how") {
+    initModels();
+    initPerformance();
+  }
 
   // Re-render hook so async live data can refresh painted surfaces.
   C._liveReRender = function () {
@@ -1632,18 +1716,26 @@
       C._homeRender.chart();
     } else if ((page === "fixtures" || page === "history") && C._fixturesRender) {
       C._fixturesRender.render();
-    } else if (page === "performance" && C._perfRender) {
-      C._perfRender.tiles();
-      C._perfRender.benchmark();
-      C._perfRender.chart("rps");
-      C._perfRender.calibration();
-      C._perfRender.weak();
-      C._perfRender.season();
-      C._perfRender.sample();
-    } else if (page === "models" && C.modelsRender) {
-      C.modelsRender.matrix();
+    } else if (page === "how") {
+      if (C._perfRender) {
+        C._perfRender.tiles();
+        C._perfRender.benchmark();
+        C._perfRender.chart("rps");
+        C._perfRender.calibration();
+        C._perfRender.weak();
+        C._perfRender.season();
+        C._perfRender.sample();
+      }
+      if (C.modelsRender) C.modelsRender.matrix();
+    } else if (page === "club" && C._clubRender) {
+      C._clubRender();
     } else if (page === "match" && C._matchRender) {
       C._matchRender.run();
     }
   };
+
+  /* Display helpers the browser tests read directly. They only label a pick
+     that is already computed; no probability is calculated here. */
+  C.pickLabel = pickLabel;
+  C.FAVOURITE_MIN = FAVOURITE_MIN;
 })();
