@@ -9,7 +9,7 @@ import path from "node:path";
 
 import { buildPayload, FILES, ROOT } from "./lib/data.mjs";
 import { buildEvaluations, ledgerStats, listForecasts, summarise } from "./lib/db.mjs";
-import { getLiveFeed, getResultsForDate, liveConfigured, peekLive, providerInfo, quotaStatus } from "./lib/live.mjs";
+import { budgetStatus, getLiveFeed, getResultsForDate, liveConfigured, peekLive, providerInfo, quotaStatus } from "./lib/live.mjs";
 import { runtime } from "./lib/runtime.mjs";
 
 const MIME = {
@@ -272,6 +272,9 @@ export async function handler(request) {
       ok: true,
       startedAt: runtime.startedAt,
       provider: { ...providerInfo(), quota: quotaStatus() },
+      // Same shape as the published web/api/health.json, which the settlement
+      // workflow reads (`quota.remaining`) — keep both in sync.
+      quota: budgetStatus(),
       live: peekLive(),
       ledger,
       data: {
@@ -326,6 +329,34 @@ export async function handler(request) {
   }
 
   if (route.startsWith("/api/")) return json({ error: "Unknown endpoint" }, 404);
+
+  // Mirror .vercelignore: these files exist in the repo but are never deployed,
+  // so the local server must not publish them either.
+  const blocked = [
+    "/package.json", "/package-lock.json", "/next.config.ts", "/tsconfig.json",
+    "/eslint.config.mjs", "/components.json", "/README.md", "/AGENTS.md",
+    "/.env", "/.env.local"
+  ];
+  if (blocked.includes(route) || /^\/(src|public|screenshots|shots|qa-final|archive)\//.test(route)) {
+    return new Response("Not found", {
+      status: 404,
+      headers: { "content-type": "text/plain; charset=utf-8", ...SECURITY_HEADERS }
+    });
+  }
+
+  // Mirror vercel.json so local runs behave like production: the merged pages
+  // keep their old URLs working instead of 404ing.
+  const legacyPages = {
+    "/models.html": "/how-it-works.html",
+    "/performance.html": "/how-it-works.html",
+    "/about.html": "/how-it-works.html"
+  };
+  if (legacyPages[route]) {
+    return new Response(null, {
+      status: 308,
+      headers: { location: legacyPages[route], ...SECURITY_HEADERS }
+    });
+  }
 
   return serveStatic(route);
 }

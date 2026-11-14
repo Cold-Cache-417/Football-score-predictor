@@ -21,10 +21,12 @@ const LA_LIGA = 140;
 /* The free plan allows 100 requests/day. Keep a persisted daily budget so no
    burst of traffic can spend it silently, and back off after a 429. */
 const DAILY_LIMIT = Number(process.env.PROVIDER_DAILY_LIMIT ?? 100);
-const QUOTA_FILE = path.join(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "../../data/raw/provider_quota.json"
-);
+const QUOTA_FILE = process.env.PROVIDER_QUOTA_FILE
+  ? path.resolve(process.env.PROVIDER_QUOTA_FILE)
+  : path.join(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../data/raw/provider_quota.json"
+    );
 let cooldownUntil = 0;
 const PROVIDER_RESERVE = Number(process.env.PROVIDER_RESERVE ?? 25);
 let lastRemaining = Number.isFinite(Number(process.env.PROVIDER_REMAINING)) && process.env.PROVIDER_REMAINING !== ""
