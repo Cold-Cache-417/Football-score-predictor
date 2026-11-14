@@ -16,7 +16,19 @@ import { getLiveFeed } from "../server/lib/live.mjs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const OUT = path.join(ROOT, "web/api/live.json");
-const write = (v) => fs.writeFileSync(OUT, JSON.stringify(v));
+const stable = (v) => JSON.stringify({ state: v.state, matches: v.matches || [], message: v.message || null });
+const write = (v) => {
+  /* Skip a write when only the poll timestamp moved, so a quiet run produces
+     no commit and no deploy. */
+  if (fs.existsSync(OUT)) {
+    try {
+      const previous = JSON.parse(fs.readFileSync(OUT, "utf8"));
+      if (stable(previous) === stable(v)) return false;
+    } catch { /* rewrite unreadable state */ }
+  }
+  fs.writeFileSync(OUT, JSON.stringify(v));
+  return true;
+};
 const guard = execFileSync(process.execPath, [path.join(ROOT, "scripts/live_window.mjs")], {
   encoding: "utf8"
 }).trim();
