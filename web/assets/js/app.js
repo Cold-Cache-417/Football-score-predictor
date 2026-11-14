@@ -76,9 +76,18 @@
     return "D";
   }
 
+  /* A favourite is only a favourite when the model actually favours it. At 41%
+     the top outcome is one of three live possibilities, so say so. */
+  const FAVOURITE_MIN = 0.4;
+
+  function pickSide(fixture, pick) {
+    return pick.key === "H" ? "Home" : pick.key === "A" ? "Away" : "Draw";
+  }
+
   function pickLabel(fixture, pick) {
-    if (pick.key === "D") return "Draw";
-    return `${C.teams[pick.key === "H" ? fixture.home : fixture.away].code} win`;
+    if (!pick) return "No forecast";
+    if (pick.value < FAVOURITE_MIN) return "Too close to call";
+    return `${pickSide(fixture, pick)} favourite`;
   }
 
   /* Team name -> slug resolution --------------------------------------------
@@ -487,7 +496,8 @@
     const pick = C.favourite(next);
     link.hidden = false;
     link.href = `match.html?id=${encodeURIComponent(next.id)}`;
-    setText("next-date", `${C.dateShort(next.date)} · ${next.timeTBC ? "TBC" : C.kickoff(next.date)}`);
+    const kickoffText = next.timeTBC ? "Kickoff TBC" : C.kickoff(next.date);
+    setText("next-date", `${C.dateShort(next.date)} · ${kickoffText} (Europe/Madrid)`);
     setHTML("next-home-crest", crestImage(next.home, 44));
     setHTML("next-away-crest", crestImage(next.away, 44));
     setText("next-home-name", home.name);
@@ -498,7 +508,7 @@
     setText(
       "next-pred-prob",
       top && pick
-        ? `${pct(top.p, 1)} · ${pick.key === "D" ? "draw" : pickLabel(next, pick)} ${pct(pick.value)}`
+        ? `${pct(top.p, 1)} · ${pickLabel(next, pick)} ${pct(pick.value)}`
         : "No forecast available"
     );
     setText("next-venue", home.stadium || "");
@@ -547,7 +557,7 @@
     } else if (isResult && !fixture.archived) {
       callBlock = '<span class="tag-call tag-call--neutral">Not forecast</span><span class="fixture-confidence">No archived prediction</span>';
     } else if (isResult) {
-      callBlock = `<span class="tag-call ${hit ? "tag-call--hit" : "tag-call--miss"}">${hit ? "Market hit" : "Upset"}</span><span class="fixture-confidence">Market favourite: ${esc(pickLabel(fixture, pick))} ${pct(pick.value)}</span>`;
+      callBlock = `<span class="tag-call ${hit ? "tag-call--hit" : "tag-call--miss"}">${hit ? "Market hit" : "Upset"}</span><span class="fixture-confidence">Market favourite: ${esc(pickSide(fixture, pick))} ${pct(pick.value)}</span>`;
     } else if (isLive) {
       callBlock = `<span class="tag-call tag-call--neutral">Live call</span><span class="fixture-confidence">${esc(pickLabel(fixture, pick))} ${pct(pick.value)}</span>`;
     } else {
@@ -705,6 +715,7 @@
     }
 
     function render() {
+      syncFilterToggle();
       const filtered = C.fixtures.filter(matches);
       const groups = {};
       filtered.forEach((fixture) => {
@@ -792,6 +803,37 @@
         render();
       });
     });
+
+    const filterBar = document.querySelector(".filter-bar");
+    const filterToggle = document.getElementById("filter-toggle");
+    const filterCount = document.querySelector("[data-filter-count]");
+
+    function activeFilterCount() {
+      return [
+        state.status !== "all",
+        state.team !== "all",
+        state.mw !== "all",
+        Boolean(state.q && state.q.trim())
+      ].filter(Boolean).length;
+    }
+
+    function syncFilterToggle() {
+      if (!filterToggle) return;
+      const count = activeFilterCount();
+      filterToggle.setAttribute("aria-label", count ? `Filters, ${count} active` : "Filters");
+      if (filterCount) {
+        filterCount.textContent = count ? `${count} active` : "";
+        filterCount.hidden = count === 0;
+      }
+    }
+
+    if (filterToggle && filterBar) {
+      document.body.classList.add("has-filter-toggle");
+      filterToggle.addEventListener("click", () => {
+        const open = filterBar.classList.toggle("is-open");
+        filterToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    }
 
     function resetAll() {
       state.q = "";

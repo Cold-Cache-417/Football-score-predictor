@@ -877,7 +877,11 @@ svg {
    Header
    ========================================================================== */
 .site-header {
-  position: relative;
+  /* The topbar scrolls away and the nav pins: sticky with a negative top
+     equal to the topbar height. Making the whole header sticky is what lets
+     .nav-wrap hold, because a sticky child is clamped to its parent's box. */
+  position: sticky;
+  top: calc(-1 * var(--topbar-h));
   z-index: 100;
 }
 
@@ -994,8 +998,9 @@ svg {
 }
 
 .nav-wrap {
-  position: sticky;
-  top: 0;
+  /* Sticks via .site-header above; sticky here too would shift the nav out of
+     the header for the first --topbar-h pixels of scroll. */
+  position: relative;
   z-index: 99;
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   border-bottom: 1px solid var(--line);
@@ -1376,8 +1381,8 @@ svg {
 }
 
 .next-card {
-  padding: clamp(18px, 2.4vw, 24px);
-  gap: 14px;
+  padding: clamp(20px, 2.6vw, 30px);
+  gap: 18px;
   border-top: 3px solid var(--coral-bright);
 }
 
@@ -1526,6 +1531,12 @@ svg {
   padding: 4px 0;
 }
 
+/* The matchup is the point of this card, so the crests lead the type scale
+   rather than sitting at the default 44px. */
+.next-team .crest {
+  --crest-size: clamp(56px, 5.6vw, 76px);
+}
+
 .next-team {
   display: flex;
   flex-direction: column;
@@ -1537,7 +1548,7 @@ svg {
 
 .next-team-name {
   font-family: var(--font-display);
-  font-size: 19px;
+  font-size: clamp(26px, 2.6vw, 36px);
   font-weight: 700;
   line-height: 0.95;
   text-transform: uppercase;
@@ -1562,7 +1573,7 @@ svg {
 
 .next-v {
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 26px;
   font-weight: 600;
   color: var(--inv-faint);
 }
@@ -1570,9 +1581,9 @@ svg {
 .prediction-box {
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: 14px;
   flex-wrap: wrap;
-  padding: 11px 12px;
+  padding: 14px 16px;
   border: 1px solid var(--inv-line);
   border-radius: var(--radius-xs);
   background: rgba(246, 244, 238, 0.035);
@@ -1590,7 +1601,7 @@ svg {
 
 .prediction-score {
   font-family: var(--font-display);
-  font-size: 38px;
+  font-size: clamp(44px, 4.6vw, 58px);
   font-weight: 800;
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -1606,7 +1617,18 @@ svg {
 }
 
 .next-card .btn {
-  margin-top: 2px;
+  margin-top: 10px;
+  min-height: 56px;
+  font-size: 15px;
+}
+
+/* Kickoff line: the second thing a fan looks for after the teams, so it gets
+   full-strength ink instead of the faint meta colour. */
+#next-date {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--inv-ink);
 }
 
 .hero-rail {
@@ -2225,6 +2247,21 @@ a.table-team:focus-visible .table-team-name {
   font-weight: 700;
   line-height: 0.85;
   color: var(--ink);
+}
+
+/* A stat cell can hold a form strip or an inline sub-value; neither should
+   inherit the block/uppercase treatment the cell label gets. */
+.head-stat .form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.head-stat small span {
+  display: inline;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: none;
+  color: inherit;
 }
 
 .head-stat small {
@@ -6074,3 +6111,58 @@ body[data-page="creator"] .section {
   .match-subnav a { min-height: 44px; height: 44px; padding: 0 12px; }
 }
 
+
+/* Mobile filter collapse --------------------------------------------------
+   Progressive enhancement: JS adds .has-filter-toggle, so the bar stays
+   visible when the script does not run. Desktop never sees the toggle. */
+.filter-toggle {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  body.has-filter-toggle .filter-bar {
+    padding: 8px 0;
+  }
+
+  body.has-filter-toggle .filter-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xs);
+    background: var(--surface);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  body.has-filter-toggle .filter-toggle svg {
+    width: 14px;
+    height: 14px;
+    flex: none;
+  }
+
+  body.has-filter-toggle .filter-bar.is-open .filter-toggle {
+    margin-bottom: 8px;
+  }
+
+  body.has-filter-toggle .filter-bar:not(.is-open) .filter-inner {
+    display: none;
+  }
+
+  body.has-filter-toggle .filter-bar.is-open .filter-inner {
+    display: grid;
+  }
+
+  body.has-filter-toggle .filter-toggle-count {
+    margin-left: auto;
+    color: var(--coral-ink);
+  }
+}

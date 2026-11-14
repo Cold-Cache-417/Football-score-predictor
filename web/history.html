@@ -100,7 +100,12 @@
 
     <div class="filter-bar">
       <div class="wrap">
-        <div class="filter-inner">
+        <button class="filter-toggle" type="button" id="filter-toggle" aria-expanded="false" aria-controls="filter-panel">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 3.5h11l-4.2 5v4.2l-2.6 1.3V8.5L2.5 3.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          <span>Filters</span>
+          <span class="filter-toggle-count" data-filter-count hidden></span>
+        </button>
+        <div class="filter-inner" id="filter-panel">
           <label class="search" for="fixture-search">
             <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.6" cy="8.6" r="5.4" stroke="currentColor" stroke-width="1.7"/><path d="m12.8 12.8 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
             <span class="sr-only">Search fixtures by club or venue</span>

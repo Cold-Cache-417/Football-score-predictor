@@ -1,0 +1,95 @@
+{
+  "base": "http://127.0.0.1:4173",
+  "generatedAt": "2026-11-14T16:35:03.282Z",
+  "viewports": [
+    "360",
+    "390",
+    "768",
+    "1024",
+    "1440"
+  ],
+  "pages": [
+    "index",
+    "fixtures",
+    "history",
+    "match",
+    "how",
+    "club",
+    "creator",
+    "404"
+  ],
+  "runs": 40,
+  "passed": 40,
+  "failed": [],
+  "links": {
+    "total": 161,
+    "broken": []
+  },
+  "interactions": [
+    {
+      "check": "fixtures default rows",
+      "value": 10,
+      "pass": true
+    },
+    {
+      "check": "fixtures results + all matchweeks = 119",
+      "value": 119,
+      "pass": true
+    },
+    {
+      "check": "fixtures search narrows rows",
+      "value": 12,
+      "pass": true
+    },
+    {
+      "check": "fixtures reset restores rows",
+      "value": 379,
+      "pass": true
+    },
+    {
+      "check": "history results + all matchweeks = 119",
+      "value": 119,
+      "pass": true
+    },
+    {
+      "check": "models tab-blend",
+      "value": "true/717 chars",
+      "pass": true
+    },
+    {
+      "check": "models tab-dc",
+      "value": "true/664 chars",
+      "pass": true
+    },
+    {
+      "check": "models tab-cat",
+      "value": "true/683 chars",
+      "pass": true
+    },
+    {
+      "check": "models tab-market",
+      "value": "true/734 chars",
+      "pass": true
+    },
+    {
+      "check": "performance metric-tab-accuracy",
+      "value": "true/602 chars",
+      "pass": true
+    },
+    {
+      "check": "performance metric-tab-rps",
+      "value": "true/623 chars",
+      "pass": true
+    },
+    {
+      "check": "performance metric-tab-logloss",
+      "value": "true/591 chars",
+      "pass": true
+    }
+  ],
+  "matchEmpty": {
+    "missingVisible": true,
+    "bodyHidden": true,
+    "title": "Match not found — Calibra"
+  }
+}
