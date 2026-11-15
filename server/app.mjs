@@ -8,6 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { buildPayload, FILES, ROOT } from "./lib/data.mjs";
+import { competitionsEnabled, DEFAULT_COMPETITION, getCompetition, listCompetitions } from "./lib/competitions.mjs";
 import { buildEvaluations, ledgerStats, listForecasts, summarise } from "./lib/db.mjs";
 import { budgetStatus, getLiveFeed, getResultsForDate, liveConfigured, peekLive, providerInfo, quotaStatus } from "./lib/live.mjs";
 import { runtime } from "./lib/runtime.mjs";
@@ -208,11 +209,14 @@ export function setLedgerReader(db) {
 /* The fixtures payload only changes when a source file or the live cache does,
    so rebuilding it per request (263 KB of JSON, ~15 ms CPU) was waste. Cache it
    against a stamp of its inputs and answer conditional requests with 304. */
-let fixturesEntry = null;
+const fixturesEntries = new Map();
 
 function fileStamp() {
   const parts = [];
-  for (const key of ["results", "predictions", "schedule", "providerResults"]) {
+  const keys = competitionsEnabled()
+    ? ["results", "predictions", "schedule", "providerResults", "providerFixtures"]
+    : ["results", "predictions", "schedule", "providerResults"];
+  for (const key of keys) {
     try {
       parts.push(`${key}:${fs.statSync(FILES[key]).mtimeMs}`);
     } catch {
@@ -224,31 +228,55 @@ function fileStamp() {
   return parts.join("|");
 }
 
-async function fixturesResponse(request) {
-  const stamp = fileStamp();
-  if (!fixturesEntry || fixturesEntry.stamp !== stamp) {
-    const live = await getLiveFeed();
-    const base = buildPayload({ liveFeed: live });
-    const recent = await reconcile(base);
-    if (recent.length) persistProviderResults(recent);
-    const payload = recent.length ? buildPayload({ liveFeed: live, recentResults: recent }) : base;
-    const body = JSON.stringify(payload);
-    fixturesEntry = {
-      stamp: fileStamp(),
-      body,
-      etag: `"${crypto.createHash("sha1").update(body).digest("hex").slice(0, 20)}"`
+/* Feature flag off: the query parameter is ignored exactly as before, so the
+   La Liga response and its ETag are unchanged. */
+function resolveCompetition(url) {
+  if (!competitionsEnabled()) return { id: DEFAULT_COMPETITION };
+  const requested = url.searchParams.get("competition");
+  if (!requested) return { id: DEFAULT_COMPETITION };
+  try {
+    return { id: getCompetition(requested).id };
+  } catch {
+    return {
+      error: {
+        code: "UNKNOWN_COMPETITION",
+        message: `Unknown competition "${requested}". See /api/competitions.`
+      }
     };
   }
+}
+
+async function fixturesResponse(request, competition) {
+  const stamp = `${competition}|${fileStamp()}`;
+  const cached = fixturesEntries.get(competition);
+  if (!cached || cached.stamp !== stamp) {
+    /* Only the La Liga path touches the live feed; other competitions are
+       served entirely from the published snapshot. */
+    const live = competition === DEFAULT_COMPETITION ? await getLiveFeed() : null;
+    const base = buildPayload({ liveFeed: live, competition });
+    /* The API-Football live reconcile is La Liga only; other competitions are
+       served from the published snapshot and never touch that quota. */
+    const recent = competition === DEFAULT_COMPETITION ? await reconcile(base) : [];
+    if (recent.length) persistProviderResults(recent);
+    const payload = recent.length ? buildPayload({ liveFeed: live, recentResults: recent, competition }) : base;
+    const body = JSON.stringify(payload);
+    fixturesEntries.set(competition, {
+      stamp: `${competition}|${fileStamp()}`,
+      body,
+      etag: `"${crypto.createHash("sha1").update(body).digest("hex").slice(0, 20)}"`
+    });
+  }
+  const entry = fixturesEntries.get(competition);
   const headers = {
     "content-type": "application/json; charset=utf-8",
     "cache-control": "public, max-age=30, must-revalidate",
-    etag: fixturesEntry.etag,
+    etag: entry.etag,
     ...SECURITY_HEADERS
   };
-  if (request.headers.get("if-none-match") === fixturesEntry.etag) {
+  if (request.headers.get("if-none-match") === entry.etag) {
     return new Response(null, { status: 304, headers });
   }
-  return new Response(fixturesEntry.body, { status: 200, headers });
+  return new Response(entry.body, { status: 200, headers });
 }
 
 export async function handler(request) {
@@ -312,11 +340,22 @@ export async function handler(request) {
     }
   }
 
-  if (route === "/api/fixtures") return fixturesResponse(request);
+  if (route === "/api/competitions") {
+    if (!competitionsEnabled()) return json({ error: "Unknown endpoint" }, 404);
+    return json({ default: DEFAULT_COMPETITION, competitions: listCompetitions() });
+  }
+
+  if (route === "/api/fixtures") {
+    const chosen = resolveCompetition(url);
+    if (chosen.error) return json({ error: chosen.error }, 400);
+    return fixturesResponse(request, chosen.id);
+  }
 
   if (route === "/api/bootstrap.js") {
-    const live = await getLiveFeed();
-    const payload = buildPayload({ liveFeed: live });
+    const chosen = resolveCompetition(url);
+    if (chosen.error) return json({ error: chosen.error }, 400);
+    const live = chosen.id === DEFAULT_COMPETITION ? await getLiveFeed() : null;
+    const payload = buildPayload({ liveFeed: live, competition: chosen.id });
     const body = `/* generated at request time from the pipeline exports; never cached */\nwindow.CALIBRA_BOOTSTRAP = ${JSON.stringify(payload)};\n`;
     return new Response(body, {
       status: 200,
@@ -326,6 +365,29 @@ export async function handler(request) {
         ...SECURITY_HEADERS
       }
     });
+  }
+
+  const bootMatch = route.match(/^\/api\/bootstrap-([a-z0-9-]+)\.js$/);
+  if (bootMatch) {
+    if (!competitionsEnabled()) return json({ error: "Unknown endpoint" }, 404);
+    try {
+      getCompetition(bootMatch[1]);
+    } catch {
+      return json({ error: "Unknown endpoint" }, 404);
+    }
+    try {
+      const body = fs.readFileSync(path.join(ROOT, "web", "api", `bootstrap-${bootMatch[1]}.js`), "utf8");
+      return new Response(body, {
+        status: 200,
+        headers: {
+          "content-type": "text/javascript; charset=utf-8",
+          "cache-control": "no-cache",
+          ...SECURITY_HEADERS
+        }
+      });
+    } catch {
+      return json({ error: "Snapshot not published" }, 404);
+    }
   }
 
   if (route.startsWith("/api/")) return json({ error: "Unknown endpoint" }, 404);

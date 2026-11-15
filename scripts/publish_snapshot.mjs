@@ -14,6 +14,7 @@ import path from "node:path";
 import { buildPayload, ROOT } from "../server/lib/data.mjs";
 import { buildEvaluations, ledgerStats, listForecasts, openLedger, summarise } from "../server/lib/db.mjs";
 import { budgetStatus } from "../server/lib/live.mjs";
+import { competitionsEnabled, DEFAULT_COMPETITION, getCompetition, listCompetitions } from "../server/lib/competitions.mjs";
 
 const SEASON = "2026/27";
 const OUT = path.join(ROOT, "web/api");
@@ -23,6 +24,8 @@ const DB = path.join(ROOT, "data/calibra.db");
 
 const failures = [];
 const fail = (m) => failures.push(m);
+const warnings = [];
+const warn = (m) => warnings.push(m);
 const SECRET_RX = /api[_-]?key|secret|bearer|password|passwd|credential|\/Users\/|BEGIN PRIVATE|ssh-rsa/i;
 
 const VOLATILE_KEYS = new Set([
@@ -87,6 +90,37 @@ function copyGrids() {
   }
   return files.length;
 }
+/* Per-competition pages are generated from fixtures.html so they cannot drift
+   from the real template. Every marker must exist, or publish fails. */
+function writeCompetitionPage(competition) {
+  const source = path.join(ROOT, "web/fixtures.html");
+  const target = path.join(ROOT, "web", `${competition.id}.html`);
+  let html = fs.readFileSync(source, "utf8");
+  const swaps = [
+    ["<title>Fixture centre — Calibra</title>", `<title>${competition.name} fixtures — Calibra</title>`],
+    [
+      'content="Browse real La Liga fixtures by club, matchweek and status. Every row opens a full match centre with outcome probabilities and the model call."',
+      `content="Browse ${competition.name} fixtures by club and status, with the source of every fixture and kickoff time. Forecasts are published for La Liga only."`
+    ],
+    [
+      'href="https://calibra-laliga.vercel.app/fixtures.html"',
+      `href="https://calibra-laliga.vercel.app/${competition.id}.html"`
+    ],
+    ['<html lang="en">', `<html lang="en" data-competition="${competition.id}">`],
+    ['<script src="/api/bootstrap.js"></script>', `<script src="/api/bootstrap-${competition.id}.js"></script>`],
+    ["Real results and pipeline forecasts", "Fixtures from FotMob, cross-checked with ESPN"]
+  ];
+  for (const [from, to] of swaps) {
+    if (!html.includes(from)) {
+      fail(`${competition.id}.html: template marker missing: ${from.slice(0, 48)}`);
+      continue;
+    }
+    html = html.replace(from, to);
+  }
+  html = html.split("La Liga predictions").join(`${competition.name} fixtures`);
+  fs.writeFileSync(target, html);
+}
+
 const generatedAt = new Date().toISOString();
 const db = openLedger(DB, { readOnly: true });
 
@@ -156,6 +190,97 @@ if (previousBoot && stableJson(previousBoot) === stableJson(payload)) {
 if (SECRET_RX.test(boot)) fail("bootstrap.js: secret-like token");
 sizes["bootstrap.js"] = boot.length;
 
+/* Non-default competitions are published best-effort. Every EPL issue is a
+   warn(): a provider problem must never stop the La Liga publish, which is
+   the only path that can still exit the job. La Liga invariants (ledger
+   counts, triggers, secrets, scoreline count) remain fail()s below. */
+function disabledCompetition(id, name) {
+  return {
+    meta: {
+      competition: { id, name },
+      providers: [],
+      providerState: { state: "unavailable", stale: true, conflicts: 0 },
+      skipped: [],
+      conflicts: []
+    },
+    error: {
+      code: "COMPETITION_DISABLED",
+      message: `${name} fixtures are not published. Use /api/fixtures for La Liga.`
+    }
+  };
+}
+
+const flagOn = competitionsEnabled();
+const nonDefault = listCompetitions().filter((c) => c.id !== DEFAULT_COMPETITION);
+
+/* Always publish the index so the switcher can decide whether to show. */
+/* The switcher is rendered from this index and links to <id>.html, so it must
+   only list competitions whose page actually exists. Flag off, or flag on
+   with no usable EPL data, publish exactly one competition. */
+/* The switcher links to <id>.html, so it must only list competitions
+   whose page actually exists. The index is written after the loop so it
+   reflects what was published this run. */
+for (const competition of nonDefault) {
+  const fixturesFile = path.join(OUT, `fixtures-${competition.id}.json`);
+  const bootFile = path.join(OUT, `bootstrap-${competition.id}.js`);
+  const pageFile = path.join(ROOT, "web", `${competition.id}.html`);
+
+  if (!flagOn) {
+    /* The switcher only lists competitions whose page exists, so a disabled
+       JSON body is dead weight: nothing links to it. Delete it instead of
+       writing it, so a flag-off run cannot leave a stale artefact behind. */
+    for (const f of [fixturesFile, bootFile, pageFile]) {
+      try { fs.unlinkSync(f); } catch { /* absent already */ }
+    }
+    continue;
+  }
+
+  let extra;
+  try {
+    extra = buildPayload({ competition: competition.id });
+  } catch (error) {
+    warn(`${competition.id}: payload failed — ${error.message}; publishing disabled body`);
+    writeJson(fixturesFile, disabledCompetition(competition.id, competition.name));
+    for (const f of [bootFile, pageFile]) {
+      try { fs.unlinkSync(f); } catch { /* absent already */ }
+    }
+    continue;
+  }
+
+  if (!extra.meta.providers.length && extra.fixtures.some((fixture) => fixture.provider)) {
+    fail(`${competition.id}: provider fixtures without attribution`);
+  }
+
+  const usable = extra.meta.matches.upcoming > 0;
+  if (!usable) {
+    if (fs.existsSync(fixturesFile)) {
+      warn(`  ${competition.id}: no provider fixtures — last good artefact kept`);
+    } else {
+      warn(`  ${competition.id}: no provider fixtures — publishing disabled body`);
+      writeJson(fixturesFile, disabledCompetition(competition.id, competition.name));
+    }
+    for (const f of [bootFile, pageFile]) {
+      try { fs.unlinkSync(f); } catch { /* absent already */ }
+    }
+    continue;
+  }
+
+  sizes[`fixtures-${competition.id}.json`] = writeJson(fixturesFile, extra);
+  const bootBody = `/* generated ${generatedAt} from the provider snapshot; public data only */\nwindow.CALIBRA_BOOTSTRAP = ${JSON.stringify(extra)};\n`;
+  if (SECRET_RX.test(bootBody)) fail(`bootstrap-${competition.id}.js: secret-like token`);
+  fs.writeFileSync(bootFile, bootBody);
+  sizes[`bootstrap-${competition.id}.js`] = bootBody.length;
+  writeCompetitionPage(competition);
+}
+
+const publishedCompetitions = listCompetitions().filter(
+  (c) => c.id === DEFAULT_COMPETITION || fs.existsSync(path.join(ROOT, "web", `${c.id}.html`))
+);
+writeJson(path.join(OUT, "competitions.json"), {
+  default: DEFAULT_COMPETITION,
+  competitions: publishedCompetitions
+});
+
 const gridCount = copyGrids();
 if (gridCount !== 260) fail(`scorelines: expected 260, got ${gridCount}`);
 console.log("exports written to web/api/");
@@ -167,6 +292,10 @@ if (failures.length) {
   console.error("\nFAILED:");
   for (const f of failures) console.error(`  - ${f}`);
   process.exit(1);
+}
+if (warnings.length) {
+  console.log("\nWARNINGS:");
+  for (const w of warnings) console.log(`  - ${w}`);
 }
 console.log("\nOK — all assertions passed");
 

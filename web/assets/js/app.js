@@ -41,6 +41,43 @@
     if (node) node.innerHTML = value;
   }
 
+  /* Provider attribution: rendered from the payload, never hard-coded, so a
+     page only credits a provider when its data is actually present. */
+  function renderAttribution() {
+    const node = document.getElementById("provider-attribution");
+    const providers = (C.meta && C.meta.providers) || [];
+    if (!node || !providers.length) return;
+    const links = providers
+      .filter((provider) => provider.role !== "failed")
+      .map((provider) => `<a href="${esc(provider.url)}" target="_blank" rel="noopener noreferrer">${esc(provider.name)}</a>`);
+    if (!links.length) return;
+    const stale = C.meta.providerState && C.meta.providerState.stale;
+    node.innerHTML = `Fixture data: ${links.join(" · ")}${stale ? " · showing the last good snapshot" : ""}.`;
+    node.hidden = false;
+  }
+
+  /* The switcher only appears when the published competitions index exists,
+     so a flag-off deployment never links to a page that was not generated. */
+  function initCompetitionSwitch() {
+    const host = document.getElementById("competition-switch");
+    if (!host || document.body.dataset.page !== "fixtures") return;
+    fetch("api/competitions", { headers: { accept: "application/json" } })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (!data || !Array.isArray(data.competitions) || data.competitions.length < 2) return;
+        const current = document.documentElement.dataset.competition || data.default;
+        host.innerHTML = data.competitions
+          .map((competition) => {
+            const href = competition.id === data.default ? "fixtures.html" : `${competition.id}.html`;
+            const active = competition.id === current ? ' aria-current="page"' : "";
+            return `<a href="${esc(href)}"${active}>${esc(competition.name)}</a>`;
+          })
+          .join("");
+        host.hidden = false;
+      })
+      .catch(() => { /* no index published: keep the page as-is */ });
+  }
+
   function formChips(form, label) {
     const letters = String(form || "").split("");
     return (
@@ -569,7 +606,13 @@
         <div class="prob-labels"><span>H ${pct(fixture.p.h)}</span><span>D ${pct(fixture.p.d)}</span><span>A ${pct(fixture.p.a)}</span></div>`
       : '<div class="prob-labels"><span>No pre-match probabilities</span></div>';
 
-    return `<a class="fixture-row${isLive ? " fixture-row--live" : ""}${isResult ? " fixture-row--result" : ""}" href="match.html?id=${encodeURIComponent(fixture.id)}">
+    /* Provider-only fixtures have no forecast page yet, so the row must not
+       pretend to be clickable. */
+    const openable = !fixture.provider;
+    const tag = openable ? "a" : "div";
+    const href = openable ? ` href="match.html?id=${encodeURIComponent(fixture.id)}"` : "";
+
+    return `<${tag} class="fixture-row${isLive ? " fixture-row--live" : ""}${isResult ? " fixture-row--result" : ""}"${href}>
       <div class="fixture-when">
         <span class="fixture-day">${esc(C.dateShort(fixture.date))}</span>
         <span class="fixture-time">${esc(fixture.timeTBC ? "TBC" : C.kickoff(fixture.date))}</span>
@@ -582,8 +625,8 @@
       <div class="fixture-score">${scoreBlock}</div>
       <div class="fixture-prob">${probabilityBlock}</div>
       <div class="fixture-call">${callBlock}</div>
-      <span class="row-arrow">${arrowIcon}</span>
-    </a>`;
+      ${openable ? `<span class="row-arrow">${arrowIcon}</span>` : ""}
+    </${tag}>`;
   }
 
   function initFixtures() {
@@ -1736,6 +1779,8 @@
 
   initTheme();
   initNavigation();
+  renderAttribution();
+  initCompetitionSwitch();
 
   const page = document.body.dataset.page;
   if (page === "home") initHome();

@@ -36,12 +36,27 @@ jobs:
       - name: Sync ledger
         run: node scripts/sync_ledger.mjs
 
+      # Provider refresh is best-effort: a provider outage must never block
+      # La Liga publishing. The snapshot is committed when usable, and the
+      # attempt marker is always written so the TTL gate can skip the next run.
+      - name: Refresh provider snapshot
+        id: providers
+        continue-on-error: true
+        env:
+          COMPETITIONS: "on"
+          PROVIDER_REFRESH_TTL_MIN: "30"
+        run: |
+          mkdir -p data/providers
+          node scripts/refresh_providers.mjs
+
       - name: Verify
         run: |
           node scripts/check_site_data.mjs
           node scripts/real_match_verify.mjs
 
       - name: Publish snapshot
+        env:
+          COMPETITIONS: "on"
         run: node scripts/publish_snapshot.mjs
 
       - name: Live snapshot (window-guarded)
@@ -56,11 +71,16 @@ jobs:
         run: |
           git config user.name "calibra-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add data/calibra.db web/api web/data
+          # La Liga paths always exist, so a failure here is a real error and
+          # must surface. Optional paths are guarded by existence tests instead
+          # of swallowing the exit code, which would hide a genuine git fault.
+          git add -A data/calibra.db web/api web/data
+          [ -d data/providers ] && git add -A data/providers
+          [ -f web/epl.html ] && git add -A web/epl.html
           if git diff --cached --quiet; then
             echo "no change"
             exit 0
           fi
           git commit -m "chore: settlement snapshot"
+          git pull --rebase --autostash
           git push
-

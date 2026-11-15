@@ -22,7 +22,27 @@ export const TEAMS = {
   rso: { name: "Real Sociedad", code: "RSO", canonical: "Real Sociedad" },
   sev: { name: "Sevilla", code: "SEV", canonical: "Sevilla" },
   val: { name: "Valencia", code: "VAL", canonical: "Valencia" },
-  vil: { name: "Villarreal", code: "VIL", canonical: "Villarreal" }
+  vil: { name: "Villarreal", code: "VIL", canonical: "Villarreal" },
+  ars: { name: "Arsenal", code: "ARS", canonical: "Arsenal" },
+  avl: { name: "Aston Villa", code: "AVL", canonical: "Aston Villa" },
+  bou: { name: "Bournemouth", code: "BOU", canonical: "AFC Bournemouth" },
+  bre: { name: "Brentford", code: "BRE", canonical: "Brentford" },
+  bha: { name: "Brighton", code: "BHA", canonical: "Brighton & Hove Albion" },
+  che: { name: "Chelsea", code: "CHE", canonical: "Chelsea" },
+  cov: { name: "Coventry City", code: "COV", canonical: "Coventry City" },
+  cry: { name: "Crystal Palace", code: "CRY", canonical: "Crystal Palace" },
+  eve: { name: "Everton", code: "EVE", canonical: "Everton" },
+  ful: { name: "Fulham", code: "FUL", canonical: "Fulham" },
+  hul: { name: "Hull City", code: "HUL", canonical: "Hull City" },
+  ips: { name: "Ipswich Town", code: "IPS", canonical: "Ipswich Town" },
+  lee: { name: "Leeds United", code: "LEE", canonical: "Leeds United" },
+  liv: { name: "Liverpool", code: "LIV", canonical: "Liverpool" },
+  mci: { name: "Manchester City", code: "MCI", canonical: "Manchester City" },
+  mun: { name: "Manchester United", code: "MUN", canonical: "Manchester United" },
+  new: { name: "Newcastle United", code: "NEW", canonical: "Newcastle United" },
+  nfo: { name: "Nottingham Forest", code: "NFO", canonical: "Nottingham Forest" },
+  sun: { name: "Sunderland", code: "SUN", canonical: "Sunderland" },
+  tot: { name: "Tottenham Hotspur", code: "TOT", canonical: "Tottenham Hotspur" },
 };
 
 const ALIASES = {

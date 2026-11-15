@@ -4,6 +4,8 @@
   "outputDirectory": "web",
   "rewrites": [
     { "source": "/api/fixtures", "destination": "/api/fixtures.json" },
+    { "source": "/api/competitions", "destination": "/api/competitions.json" },
+    { "source": "/api/fixtures/epl", "destination": "/api/fixtures-epl.json" },
     { "source": "/api/ledger", "destination": "/api/ledger.json" },
     { "source": "/api/live", "destination": "/api/live.json" },
     { "source": "/api/health", "destination": "/api/health.json" }

@@ -30,11 +30,11 @@
   <link rel="preload" href="assets/fonts/roboto-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/roboto-mono-500.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/roboto-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/concept.css?v=10">
+  <link rel="stylesheet" href="assets/css/concept.css?v=11">
   <script src="/api/bootstrap.js"></script>
-  <script src="assets/js/data.js?v=6" defer></script>
-  <script src="assets/js/data-live.js?v=6" defer></script>
-  <script src="assets/js/app.js?v=10" defer></script>
+  <script src="assets/js/data.js?v=7" defer></script>
+  <script src="assets/js/data-live.js?v=7" defer></script>
+  <script src="assets/js/app.js?v=12" defer></script>
 </head>
 <body data-page="fixtures">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -85,9 +85,11 @@
       <div class="wrap page-head-grid">
         <div>
           <div class="section-label">Fixture centre</div>
+          <nav id="competition-switch" class="competition-switch" aria-label="Competition" hidden></nav>
           <h1>Every match. <span>Every scoreline.</span></h1>
           <p class="page-lead">Search by club or matchweek, filter to live, upcoming or settled, and open any fixture for its predicted scoreline. Every settled match keeps the call made before kick-off, right beside the final score.</p>
           <p class="page-note" data-fixtures-note>2026/27 season · Real results and pipeline forecasts · All times CET</p>
+          <p id="provider-attribution" class="provider-attribution" hidden></p>
         </div>
         <div class="page-head-stats" aria-label="Fixture centre at a glance">
           <div class="head-stat"><span>Fixtures</span><strong data-stat-total>—</strong><small>2026/27 season</small></div>

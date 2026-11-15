@@ -6166,3 +6166,43 @@ body[data-page="creator"] .section {
     color: var(--coral-ink);
   }
 }
+
+/* Competition switcher and provider attribution (Phase 4A). */
+.competition-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 0.9rem;
+}
+
+.competition-switch a {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.competition-switch a:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.competition-switch a[aria-current="page"] {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.provider-attribution {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.provider-attribution a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

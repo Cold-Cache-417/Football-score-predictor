@@ -51,6 +51,14 @@
       C.meta = payload.meta;
       if (payload.meta.resultsThroughMw != null) C.league.currentMatchweek = payload.meta.resultsThroughMw;
       if (payload.meta.nextMw != null) C.league.nextMatchweek = payload.meta.nextMw;
+      if (payload.meta.competition) {
+        /* A competition without a ledger has no matchweeks: say so instead of
+           inheriting La Liga's. */
+        C.league.name = payload.meta.competition.name;
+        C.league.season = payload.meta.competition.season;
+        C.league.currentMatchweek = payload.meta.resultsThroughMw ?? null;
+        C.league.nextMatchweek = payload.meta.nextMw ?? null;
+      }
     }
     if (payload.metrics) C.metrics = Object.assign({}, C.metrics || {}, payload.metrics);
     if (payload.performance) C.performance = Object.assign({}, C.performance || {}, payload.performance);

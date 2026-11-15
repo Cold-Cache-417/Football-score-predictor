@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import { parseCsv } from "./csv.mjs";
 import { slugFor, TEAMS } from "./teams.mjs";
 import { buildEvaluations, listForecasts, openLedger, pairKey, summarise } from "./db.mjs";
+import { competitionsEnabled, DEFAULT_COMPETITION, getCompetition } from "./competitions.mjs";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const FILE = {
@@ -16,6 +17,8 @@ const FILE = {
   predictions: path.join(ROOT, "data/website/upcoming_predictions.csv"),
   schedule: path.join(ROOT, "data/raw/schedule_2627.json"),
   providerResults: path.join(ROOT, "data/raw/api_results_2627.json"),
+  providerFixtures:
+    process.env.CALIBRA_PROVIDER_SNAPSHOT || path.join(ROOT, "data/providers/provider_fixtures.json"),
   rawResults: path.join(ROOT, "data/raw/SP1_2627.csv"),
   metrics: path.join(ROOT, "reports/test_metrics_final.csv"),
   perSeason: path.join(ROOT, "reports/per_season_metrics_final.csv"),
@@ -425,11 +428,41 @@ function ledgerState() {
   }
 }
 
-export function buildPayload({ liveFeed = null, recentResults = [] } = {}) {
-  const schedule = scheduleIndex();
-  const results = resultFixtures();
-  const predictions = predictionFixtures(schedule);
-  const provider = providerFixtures(schedule);
+/* Provider snapshot, read only when the flag is on. Cached by file identity so
+   a repeated request costs one stat(), and a refresh invalidates the cache. */
+let snapshotCache = null;
+function providerSnapshot() {
+  if (!competitionsEnabled()) return null;
+  let stat;
+  try {
+    stat = fs.statSync(FILE.providerFixtures);
+  } catch {
+    return null;
+  }
+  const key = `${FILE.providerFixtures}|${stat.mtimeMs}|${stat.size}`;
+  if (snapshotCache && snapshotCache.key === key) return snapshotCache.data;
+  try {
+    const data = JSON.parse(fs.readFileSync(FILE.providerFixtures, "utf8"));
+    snapshotCache = { key, data };
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export function buildPayload({
+  liveFeed = null,
+  recentResults = [],
+  competition = DEFAULT_COMPETITION
+} = {}) {
+  const activeCompetition = competitionsEnabled() ? competition : DEFAULT_COMPETITION;
+  const isDefault = activeCompetition === DEFAULT_COMPETITION;
+  /* A non-default competition has no pipeline export: showing La Liga's
+     results or forecasts under another league's name would be a lie. */
+  const schedule = isDefault ? scheduleIndex() : { index: new Map(), mtime: null };
+  const results = isDefault ? resultFixtures() : { fixtures: [], mtime: null };
+  const predictions = isDefault ? predictionFixtures(schedule) : { fixtures: [], mtime: null, type: null };
+  const provider = isDefault ? providerFixtures(schedule) : [];
 
   const byId = new Map(results.fixtures.map((fixture) => [fixture.id, fixture]));
   for (const fixture of provider) {
@@ -487,7 +520,7 @@ export function buildPayload({ liveFeed = null, recentResults = [] } = {}) {
 
   // Archived pre-kickoff forecasts, joined by season|home|away so a rescheduled
   // fixture still finds its own prediction.
-  const ledgerView = ledgerState();
+  const ledgerView = isDefault ? ledgerState() : { forecasts: new Map(), evaluations: [], record: null };
   const verdictByPair = new Map(ledgerView.evaluations.map((row) => [row.pairKey, row]));
   for (const fixture of [...settled, ...upcoming]) {
     const key = pairKey("2026/27", fixture.home, fixture.away);
@@ -520,9 +553,12 @@ export function buildPayload({ liveFeed = null, recentResults = [] } = {}) {
     };
   }
 
-  const { metrics, models } = metricsFromLive();
-  const performance = performanceFromPerSeason();
-  const calibration = calibrationFromTest();
+  const liveMetrics = isDefault ? metricsFromLive() : { metrics: null, models: null };
+  const { metrics, models } = liveMetrics;
+  const performance = isDefault ? performanceFromPerSeason() : null;
+  const calibration = isDefault
+    ? calibrationFromTest()
+    : { rows: 0, ece: null, marketEce: null, bins: [] };
 
   const fixtures = [...settled, ...upcoming].sort((a, b) => {
     const left = a.date || "";
@@ -530,6 +566,39 @@ export function buildPayload({ liveFeed = null, recentResults = [] } = {}) {
     if (left === right) return a.id < b.id ? -1 : 1;
     return left < right ? -1 : 1;
   });
+
+  /* Provider fixtures never touch the La Liga path. They are appended as
+     copies of the published snapshot, so buildPayload cannot mutate the
+     cached objects, and no ledger join can attach a forecast to them. */
+  let providerEntry = null;
+  let competitionMeta = null;
+  if (activeCompetition !== DEFAULT_COMPETITION) {
+    const meta = getCompetition(activeCompetition);
+    const raw = providerSnapshot()?.competitions?.[activeCompetition] || null;
+    providerEntry = raw;
+    /* Staleness is derived from the committed attempt marker, not from
+       updatedAt, because a stable-content refresh rewrites the marker and
+       would otherwise report a stale snapshot as fresh. */
+    const staleThresholdMs = 2 * 60 * 60 * 1000;
+    const lastAttempt = raw?.state?.lastAttemptAt ? Date.parse(raw.state.lastAttemptAt) : null;
+    const isStale = !raw?.fixtures?.length || !lastAttempt || Date.now() - lastAttempt > staleThresholdMs;
+    const extra = (providerEntry?.fixtures || []).map((fixture) => structuredClone(fixture));
+    fixtures.push(...extra);
+    fixtures.sort((a, b) => {
+      const left = a.date || "";
+      const right = b.date || "";
+      if (left === right) return a.id < b.id ? -1 : 1;
+      return left < right ? -1 : 1;
+    });
+    competitionMeta = {
+      competition: { id: meta.id, name: meta.name, country: meta.country, season: meta.season },
+      providers: providerEntry?.providers || [],
+      providerState: { ...(providerEntry?.state || {}), stale: isStale },
+      skipped: providerEntry?.skipped || [],
+      conflicts: providerEntry?.conflicts || [],
+      ...(providerEntry?.error ? { error: providerEntry.error } : {})
+    };
+  }
 
   const resultMws = settled.map((fixture) => fixture.mw).filter(Boolean);
   const upcomingMws = upcoming.map((fixture) => fixture.mw).filter(Boolean);
@@ -541,21 +610,30 @@ export function buildPayload({ liveFeed = null, recentResults = [] } = {}) {
   if (awaiting) {
     warnings.push(`${awaiting} fixture${awaiting === 1 ? "" : "s"} kicked off without a confirmed result yet.`);
   }
-  if (predictions.mtime) {
-    const predictionsDate = new Date(predictions.mtime).getTime();
-    const resultsDate = results.mtime ? new Date(results.mtime).getTime() : 0;
-    if (resultsDate - predictionsDate > 36 * 3600 * 1000) {
-      warnings.push("The forecast export is older than the latest results — re-run the pipeline to re-price.");
+  if (isDefault) {
+    if (predictions.mtime) {
+      const predictionsDate = new Date(predictions.mtime).getTime();
+      const resultsDate = results.mtime ? new Date(results.mtime).getTime() : 0;
+      if (resultsDate - predictionsDate > 36 * 3600 * 1000) {
+        warnings.push("The forecast export is older than the latest results — re-run the pipeline to re-price.");
+      }
+    }
+    if (!predictions.fixtures.length) {
+      warnings.push("No upcoming forecasts exported yet.");
     }
   }
-  if (!predictions.fixtures.length) {
-    warnings.push("No upcoming forecasts exported yet.");
+
+  if (competitionMeta?.providerState?.stale) {
+    warnings.push("Provider fixtures could not be refreshed; showing the last good snapshot.");
+  }
+  if (competitionMeta?.conflicts?.length) {
+    warnings.push(`${competitionMeta.conflicts.length} provider conflict${competitionMeta.conflicts.length === 1 ? "" : "s"} flagged for inspection; primary values kept.`);
   }
 
   return {
     meta: {
       season: "2026/27",
-      league: "La Liga",
+      league: competitionMeta ? competitionMeta.competition.name : "La Liga",
       generatedAt: new Date().toISOString(),
       resultsThroughMw,
       nextMw,
@@ -574,7 +652,12 @@ export function buildPayload({ liveFeed = null, recentResults = [] } = {}) {
       warnings,
       liveRecord: ledgerView.record,
       forecastsRecorded: ledgerView.evaluations.length,
-      matches: { settled: settled.length, upcoming: upcoming.length, total: fixtures.length }
+      matches: {
+        settled: settled.length,
+        upcoming: upcoming.length + (providerEntry?.fixtures?.length || 0),
+        total: fixtures.length
+      },
+      ...(competitionMeta || {})
     },
     fixtures,
     standings,
