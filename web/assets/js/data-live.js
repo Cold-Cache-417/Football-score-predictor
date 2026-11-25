@@ -85,7 +85,9 @@
     const days = upcoming.map((fixture) => fixture.day).sort();
     const first = shortFmt.format(new Date(`${days[0]}T12:00:00Z`));
     const last = shortFmt.format(new Date(`${days[days.length - 1]}T12:00:00Z`));
-    return `MW ${next} · ${first === last ? first : `${first}–${last}`}`;
+    const range = first === last ? first : `${first}–${last}`;
+    /* Provider competitions have no matchweek numbers, so never print "MW null". */
+    return next ? `MW ${next} · ${range}` : range;
   }
 
   function updateChrome() {

@@ -110,6 +110,8 @@ function writeCompetitionPage(competition) {
       `href="https://calibra-laliga.vercel.app/${competition.id}.html"`
     ],
     ['<html lang="en">', `<html lang="en" data-competition="${competition.id}">`],
+    ['<span class="topbar-league"><span class="topbar-dot"></span>LALIGA · 2026/27</span>',
+      `<span class="topbar-league"><span class="topbar-dot"></span>${competition.name.toUpperCase()} · ${competition.season}</span>`],
     ['<script src="/api/bootstrap.js"></script>', `<script src="/api/bootstrap-${competition.id}.js"></script>`],
     ["Real results and pipeline forecasts", "Fixtures from FotMob, cross-checked with ESPN"]
   ];
