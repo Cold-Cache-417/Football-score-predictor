@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-25T14:34:40.785Z",
+ "updatedAt": "2026-11-25T15:28:59.909Z",
  "competitions": {
   "epl": {
    "fetchedAt": "2026-11-25T14:34:40.785Z",
@@ -23,7 +23,7 @@
     "fallbackUsed": false,
     "stale": false,
     "lastError": null,
-    "lastAttemptAt": "2026-11-25T14:34:40.785Z",
+    "lastAttemptAt": "2026-11-25T15:28:59.909Z",
     "conflicts": 0
    },
    "fixtures": [
@@ -230,5 +230,6 @@
    "conflicts": [],
    "unmatchedSecondary": []
   }
- }
+ },
+ "lastAttemptAt": "2026-11-25T15:28:59.909Z"
 }
