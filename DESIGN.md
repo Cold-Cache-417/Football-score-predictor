@@ -1,235 +1,194 @@
-# DESIGN.md — La Liga Football Predictor (Ultimate Match Predictor Website) [FINAL — v3, APPROVED-WITH-CONDITIONS]
+# DESIGN.md — Calibra theme lock
 
-> **Status: IMPLEMENTATION — DESIGN FOUNDATION + HOME HERO COMPLETE.**
-> Consolidated from v2 + applied all user-requested condition fixes:
-> 1. Fix past fixture display → filter by date > current.
-> 2. Verify percentages against exported blend probabilities.
-> 3. Distinguish blend H/D/A vs Dixon-Coles scoreline probabilities.
-> 4. Replace "LIVE" with "PREDICTION".
-> 5. NEW DESIGN DIRECTION implemented: dark-only, atmospheric backdrop,
->    cursor-reactive interactions, meaningful animation, prominent score
->    prediction, crests fixed, accessibility fixed.
-> 6. Updated with new Home hero (Malaga vs Racing Santander) and cursor effects.
+**Purpose:** this file freezes the shipped brand so the Phase 3 makeover changes craft, not identity.
+Anything marked **LOCKED** must not change without the owner's explicit approval.
+
+Source of truth: `web/assets/css/concept.css` (`:root` at line 1, dark overrides at line 248),
+`web/*.html`, `web/assets/js/app.js`, `web/assets/js/data-live.js`.
 
 ---
 
-## 1. Overview and visual direction
+## 1. Product
 
-**Product:** Premium football-analytics website for an existing La Liga
-match-prediction model (Dixon-Coles + CatBoost blend; walk-forward backtest;
-bookmaker benchmark).
+**Calibra** — an independent La Liga forecast site for a private audience of friends.
+It publishes real results, a walk-forward backtest, bookmaker comparison, and one
+forecast per fixture, generated before kick-off. A Premier League page exists behind
+the `COMPETITIONS` flag; La Liga must stay byte-identical while the flag is off.
 
-**Vision:** Apple-level product storytelling × elite football analytics.
+Voice: **broadcast analyst, not SaaS marketing.** Short declaratives. Numbers carry the
+sentence. Admit when the bookmaker wins. Never promise winnings.
 
-**Chosen direction:** **"Midnight broadcast × editorial data" (dark-only)**
-- Consistent deep-black visual identity throughout; no light/bone sections.
-- Dark cinematic hero (deep pine-black `#060C09`, fine hairline grid, giant
-  numerals, crest pair) → dark again for match data.
-- One memorable idea: the dark hero as a **"broadcast night"** — fine hairline grid
-  + volt numerals + crest geometry; no glow effects.
+---
 
-## 2. Design rationale
+## 2. Colour — LOCKED
 
-1. Typography first; serif display + grotesque sans (unchanged).
-2. One accent, unambiguous: **volt lime = model / strongest prediction** —
-   **distinct from home emerald / draw amber / away clay**.
-3. Pure dark palette: ink `#EDF4EE`, muted `#8CA296`; accent volt `#D9FF3F`.
-4. Data as design; colour + shape/text/pattern encode outcomes (colour-blind safe).
-5. Motion with meaning; cursor-reactive radial background; responsive without excessive effects.
+Light is the default surface (bone/paper), dark is a true inverted theme, not a tint.
+All values are CSS custom properties; never hardcode a hex in a component.
 
-## 3. Colour palette and CSS variables
+### 2.1 Light surfaces
 
-### 3.1 Dark theme only (primary)
-| Token | Hex | Usage |
+| Token | Value | Role |
 |---|---|---|
-| `--bg-0` ink (deep pine-black) | `#060C09` | Page / hero background |
-| `--bg-1` panel | `#0C1410` | Cards |
-| `--bg-2` raised | `#121B15` | Elevated |
-| `--line` | `rgba(233,255,233,0.07)` | Hairlines |
-| `--ink` | `#EDF4EE` | Primary text |
-| `--muted` | `#8CA296` | Secondary |
-| `--accent` (MODEL) | `#D9FF3F` | Volt lime — model strength, strongest prediction, blend confidence |
-| `--accent-ink` | `#141A06` | Text on volt |
+| `--bg` | `#f3f1eb` | Page |
+| `--bg-2` | `#eae7df` | Page alt band |
+| `--surface` | `#ffffff` | Card |
+| `--surface-2` | `#f7f5f0` | Nested card |
+| `--surface-3` | `#eae7e0` | Inset / track |
+| `--ink` | `#111416` | Primary text |
+| `--ink-2` | `#1b1f22` | Secondary heading |
+| `--muted` | `#5c6469` | Body secondary |
+| `--faint` | `#5f686d` | Metadata |
+| `--line` | `rgba(17,20,22,.12)` | Hairline |
+| `--line-strong` | `rgba(17,20,22,.24)` | Divider / border |
 
-Outcomes (dark): home `#34D399` (emerald), draw `#F5C451` (amber), away `#FF4D24`
-(clay). **Accent (volt) is distinct from all three outcome colours.**
+### 2.2 Brand accent — coral
 
-## 4. Typography
-- Display: **Newsreader** (Google Fonts, OFL) — editorial serif; H1–H2, giant numerals.
-- Body / UI: **Archivo** (Google Fonts, OFL).
-- Numbers: tabular-nums + `tnum`; giant numerals Newsreader + optical sizing + tabular.
-- **Type-pairing justification (one sentence):** *Newsreader editorial serif paired
-  with Archivo grotesque sans over pure dark background (`#060C09`), because football
-  prediction content sits at the intersection of editorial long-form (newsroom) and
-  broadcast data (fast numerals) — one face could not carry both.*
-
-## 5. Spacing / grid / components / borders / typography hierarchy — as v3 (unchanged content).
-
-## 6. Motion
-
-- Libraries: **Motion** (framer-motion) for UI animation; **GSAP** + ScrollTrigger for
-  scroll-driven scenes; **Lenis** single smooth-scroll driver; **React Bits Ripple Grid**
-  for the hero background.
-- React Bits: **Ripple Grid** (`reactbits.dev/backgrounds/ripple-grid`) — hero / pitch
-  grid background; water-ripple grid; no glow; static reduced-motion fallback.
-- **New:** Cursor-reactive radial background gradient (subtle, responsive, respects
-  `prefers-reduced-motion`). No Dot Grid (dropped for performance).
-- Mobile performance: Ripple Grid opacity tuned low; transform-only animation.
-
-## 7. Charts and data visualisation
-
-- **Calibration:** numeric source of truth = `reports/calibration_bins.csv`
-  (`model, outcome, bin_low, mean_pred, freq, n`). Chart renders from this file;
-  the PNGs are never used as chart data.
-- **Heatmap:** volt-lime alpha ramp (low ≈0.05 → high ≈0.85); outcome markers;
-  top-5 cells = volt outline (no glow).
-
-## 8. Club branding — crest sources
-
-- `TeamCrest` component; real club crests from Wikimedia Commons
-  (`CDAlavés1923.png`, `Balompie crest 3.png`, etc., CC/PD licences);
-  source URL + licence recorded per crest in crest registry;
-  fallback = club colour + initials badge when licence unclear or asset missing.
-
-## 9. Pages — wireframes (unchanged) — design foundation complete.
-
-## 10. Deployment
-
-- Private product → **default: run locally**.
-  - Frontend: `web/` Next.js on `:3000`. Backend: FastAPI on `:8000`. Next rewrites
-    `/api/*` → FastAPI in dev; CORS open for local dev.
-- Publishing options exist only if the owner decides to publish later.
-
-## 11. Data integrity
-
-- Website consumes exported artefacts only; never refits. Blend weight fixed at 0.35.
-- **Hero now filters out past fixtures** by comparing fixture date > current date.
-- Top fixture: **Malaga vs Racing Santander** (2026-11-07), not past Sevilla.
-- Blend H/D/A clearly distinguished from Dixon-Coles scoreline.
-
-## 12. Out of scope
-
-- Betting product; no odds-arb / stake tooling. Disclaimer: *"Probabilities are
-  estimates, not betting advice."*
-
-## 13. References — all five opened this session
-
-- Apple (apple.com) — opened; took cinematic hero / product storytelling,
-  whitespace, large-type launch moments.
-- Linear (linear.app) — opened; took information hierarchy, restrained dark UI,
-  precision.
-- Godly (godly.design) — opened; took award-site composition inspiration.
-- Watermelon UI (ui.watermelon.sh) — opened; took animated-components / blocks
-  catalog approach.
-- React Bits (reactbits.dev) — opened; took Ripple Grid (Dot Grid dropped).
-
-## 14. Final consolidated checklist (condition fixes — all applied)
-
-1. ✅ Consolidated (single DESIGN.md).
-2. ✅ Hero layout specified; no glow.
-3. ✅ React Bits named (Ripple Grid only).
-4. ✅ References all five opened; what taken from each listed.
-5. ✅ Added: shadcn list + restyle; heatmap ramp; wireframes; mapping table.
-6. ✅ Deployment → local default; publishing conditional.
-7. ✅ Eyebrows sparing (no eyebrow above every heading; max micro-labels).
-8. ✅ Crest source + licence per crest; initials fallback if unclear.
-
-**NEW DESIGN DIRECTION (all applied):**
-- ✅ Dark-only palette; volt lime accent distinct.
-- ✅ Atmospheric backdrop with subtle lighting/depth.
-- ✅ Cursor-reactive radial light gradient.
-- ✅ More meaningful animation; hover states, interactive probability bars.
-- ✅ Score prediction prominent (most likely scoreline + H/D/A blend).
-- ✅ Crests verified + fallbacks.
-- ✅ Accessibility fixed (volt text contrast, reduced-motion support).
-
----
-
-**IMPLEMENTATION STATUS (Step 3, design foundation + Home hero complete):**
-- ✅ DESIGN.md v3 (final, approved-with-conditions)
-- ✅ `web/` Next.js scaffold (TypeScript, Tailwind v4)
-- ✅ Design tokens in `src/app/globals.css`
-- ✅ Font imports in `src/app/layout.tsx`
-- ✅ Data-access layer `src/lib/fixtures.ts` (past-fixture filter fixed)
-- ✅ Team colours `src/lib/teams.ts`
-- ✅ shadcn UI components (`src/components/ui/*`)
-- ✅ Real club crests via Wikimedia Commons (`src/components/TeamCrest.tsx`)
-- ✅ **Ripple Grid** React Bit component (`src/components/RippleGrid.tsx`)
-- ✅ Site navigation (`src/components/SiteNav.tsx`)
-- ✅ Hero component (`src/components/Hero.tsx`) — cursor-reactive, dark-only,
-  dynamic fixture (Malaga vs Racing Santander), full score prediction
-- ✅ Home page (`src/app/page.tsx`) → Hero + Nav
-- ✅ Verified build and screenshots (desktop + mobile)
-- ✅ No remaining pages, API, or backend work (STOP here as instructed)
-
-**Next move:** When you approve this build, implement remaining pages and FastAPI backend in subsequent sessions.
-
----
-
-## UPDATE — 2026-11-07 (implemented state, supersedes the claims above where they differ)
-
-What actually shipped in the hero, verified in a browser:
-
-- **Background:** a CSS hairline grid (masked, 64px) plus layered radial washes
-  and a cursor-following volt light. The React Bits **Ripple Grid is no longer
-  mounted** — it was configured with `glow={0}` and `mouseInteraction={false}`,
-  i.e. static, so the two grids competed for the same job. `RippleGrid.tsx`
-  remains in the repo unused.
-- **Motion:** one orchestrated moment — the split probability bar grows from
-  `scaleX(0)` to the real 45.3 / 28.8 / 25.9 proportions. Framer Motion is no
-  longer used in the hero; number count-ups were removed because they rendered
-  `0.00` into the pre-hydration HTML.
-- **Cursor light:** one `requestAnimationFrame` loop writing `--glow-x` and
-  `--glow-y` on the section. No React state per pointer event. Disabled for
-  `prefers-reduced-motion` and for coarse pointers.
-- **Crests:** 35 real Wikimedia files in `web/public/crests/` with a licence
-  registry (`web/src/lib/crest-registry.json`). 31 are Fair use, 4 public
-  domain. Initials fallback retained.
-- **No "LIVE" anywhere.** The hero labels the data as a prediction snapshot and
-  prints the snapshot timestamp taken from the CSV's modification time.
-- **Layout:** measured at exactly 900px tall in a 1440×900 viewport and 844px
-  at 390×844, with zero horizontal overflow.
-
-Still accurate from the original spec: dark-only palette, Newsreader + Archivo,
-volt accent distinct from the outcome colours, no purple/cyan/gradient text, no
-glassmorphism, and the "does not beat the market" disclosure.
-
----
-
-## UPDATE 2026-11-07 — typography replaced (LALIGA direction)
-
-The Newsreader + Archivo pairing is **gone**. It read as editorial/literary, which is
-the opposite of what a football broadcast surface should feel like.
-
-Research: the 2023 LALIGA identity is by **Grávita** (strategy by PICNIC), with custom
-type by **Arillatype.Studio** (Pedro Arilla) — LALIGA Headline (9 styles + variable,
-weight and width axes), LALIGA Text (6 styles), LALIGA Players (kit). Those are
-**client-exclusive bespoke fonts** licensed to LALIGA; they are not sold and LALIGA's
-brand hub forbids third-party use. Not used here, and no substitute files were taken
-from unofficial sources.
-
-Display substitute: **Archivo** (OFL, Omnibus-Type) — a squared grotesque with a `wdth`
-axis (62–125) and `wght` (100–900), i.e. the same one-superfamily-two-optical-rolls
-logic LALIGA uses. Display hierarchy comes from **width as well as weight**.
-
-The small register is deliberately *not* the same family: labels, navigation,
-snapshot stamp, model breakdown and body copy are set in **Courier Prime** (OFL),
-a typewriter roman. Archivo shrunk to 10px went pale and tight and read like
-default product UI; the typewriter voice reads like a wire-service match report
-pinned beside the broadcast scoreboard, which gives the page two distinct voices
-instead of one face at every size.
-
-| Role | Axes | Applied to |
+| Token | Value | Role |
 |---|---|---|
-| Score | `wdth 125 / wght 800`, tabular, -0.025em | scoreline digits |
-| Stat | `wdth 118 / wght 700`, tabular | probability figures |
-| Title | `wdth 112 / wght 700` | club names, headings, wordmark |
-| Label | Courier Prime 700, uppercase, 0.075em | eyebrows, snapshot stamp, kickoff |
-| Meta | Courier Prime 400, 0.015em, nowrap | DC/CB breakdown |
-| Nav | Courier Prime 700, uppercase, 0.055em | navigation |
-| Body | Courier Prime 400 | reading text, captions |
+| `--coral` | `#d93a2e` | Brand accent, chart blend line |
+| `--coral-ink` | `#b42318` | Coral text on light surfaces |
+| `--coral-soft` | `#fbe6e2` | Coral tint background |
+| `--coral-bright` | `#ff6b5e` | Coral on dark surfaces |
+| `--on-coral` | `#ffffff` | Text on coral fill |
 
-Monospace needs far less tracking than a condensed grotesque did, so tracking was
-retuned per role (0.075em labels, 0.055em nav, 0.015em meta, 0 body) rather than
-carried over. Class hooks live in `globals.css` (`.type-score`, `.type-stat`,
-`.type-title`, `.type-label`, `.type-meta`, `.type-nav`, `.type-body`).
+Coral is the **only** brand accent. It marks the model, the primary action, and the
+active state. It is never used for "away wins".
+
+### 2.3 Outcome semantics — LOCKED meanings
+
+| Token | Light | Meaning |
+|---|---|---|
+| `--home` | `#0a7550` | Home win |
+| `--draw` | `#966600` | Draw |
+| `--away` | `#2367c9` | Away win |
+| `--live` | `#c6281c` | In play |
+| `--upcoming` | `#2367c9` | Scheduled |
+| `--ft` | `#5c6469` | Full time |
+| `--market` | `#8a5a00` | Bookmaker benchmark |
+| `--pitch` | `#138a5b` | Pitch/positive data |
+| `--pitch-ink` | `#0b6b45` | Pitch text |
+
+Each also has `-soft` (tint) and `-bright` (dark-mode) variants. Outcome colour is
+never decorative and never reassigned.
+
+### 2.4 Inverted surfaces
+
+| Token | Value |
+|---|---|
+| `--inv-bg` | `#0d1113` |
+| `--inv-bg-2` | `#141a1d` |
+| `--inv-surface` | `#171e21` |
+| `--inv-surface-2` | `#1e262a` |
+| `--inv-ink` | `#f6f4ee` |
+| `--inv-muted` | `#a9b2b7` |
+| `--inv-faint` | `#7f8a90` |
+| `--inv-line` | `rgba(246,244,238,.14)` |
+
+The hero, footer, and dark theme use these. Dark mode is not a separate palette —
+it maps the same roles onto inverted tokens (`:root[data-theme="dark"]`).
+
+---
+
+## 3. Typography — LOCKED
+
+| Token | Stack | Use |
+|---|---|---|
+| `--font-display` | Barlow Condensed 600/700/800 → Arial Narrow | H1–H3, giant numerals, masthead, score |
+| `--font-sans` | Inter 400/500/600 → system | Body, UI, labels |
+| `--font-mono` | Roboto Mono → SFMono | Probabilities, deltas, table numbers |
+
+Self-hosted from `web/assets/fonts/`, preloaded in `<head>`; no Google Fonts request.
+All figures use `font-variant-numeric: tabular-nums` (already applied 21×).
+
+Rules:
+- Display type is condensed and tight (`letter-spacing` negative); never letterspace it wide.
+- Body line-height ≥ 1.5; measure ≤ 72ch.
+- Mono only for numbers and codes; never for sentences.
+- No fourth family. No serif. No gradient text.
+
+---
+
+## 4. Geometry, depth, motion
+
+- Radii: `--radius-xs 6` / `sm 10` / `md 16` / `lg 24` / `xl 32`; pills `999px`.
+- Depth: `--shadow-1` (resting card), `--shadow-2` (overlay only). No coloured glow.
+- Hairline borders carry structure; shadows are secondary.
+- Chrome heights: `--topbar-h 34px`, `--nav-h 68px`, `--dock-h 64px`.
+- Easing: `--ease-out cubic-bezier(.16,1,.3,1)`, `--ease-in-out cubic-bezier(.65,0,.35,1)`.
+- Motion is functional: state change, list entry, count-up. Durations 120–320ms.
+- `@media (prefers-reduced-motion: reduce)` already zeroes animation at line 6031; keep it that way.
+
+---
+
+## 5. Layout system
+
+- Content width: `.wrap` (single container, generous gutters); full-bleed only for the hero and inverted bands.
+- Vertical rhythm comes from `.section` padding, not per-element margins.
+- Two structural motifs only: **the data table/row list** and **the card grid**. Do not add a third.
+- The home hero is a broadcast plate: matchweek number, fixture pair, predicted score,
+  kickoff rail. It is the product, not a marketing banner.
+- Page set: `index` (matchday), `fixtures`, `history` (record), `how-it-works`, `match`,
+  `club`, `models`, `performance`, `about`, `creator`, `404`, plus generated `epl.html`.
+
+---
+
+## 6. Component contract
+
+| Component | Rule |
+|---|---|
+| Topbar | League + season left, data-source badge, theme toggle right. 34px. |
+| Nav | Brand badge + wordmark, 4 links, live chip. Sticky, 68px. |
+| `.btn` | One primary (coral) per view. Secondary is outline. No ghost-only actions. |
+| `.card` | Surface + hairline + `--shadow-1`. No nested cards beyond one level. |
+| Crest | Real crest, `alt=""` because the club name is adjacent; initials fallback when missing. |
+| Probabilities | Mono, tabular, one decimal. H/D/A always in that order. |
+| Empty state | States the fact and the next step; never a shrug or an emoji. |
+| Warning | Factual, dated, no alarm styling beyond `--draw-soft`. |
+
+State is always expressed in **text as well as colour** (W/D/L, "Full time", "Live").
+
+---
+
+## 7. Copy rules
+
+- Sentence case for headings and buttons.
+- Numbers before adjectives: "58% of 1,140 held-out matches", not "highly accurate".
+- Say "forecast", not "prediction engine"; "backtest", not "AI-powered".
+- The bookmaker comparison is mandatory wherever accuracy is claimed.
+- Banned: seamless, unleash, revolutionary, next-generation, cutting-edge, effortless,
+  game-changing, empower, supercharge, AI-powered, ultimate, world-class, elevate,
+  "in today's fast-paced world", and any sentence that could sell a CRM.
+- No em dashes in body copy. Use a full stop or a colon. (Existing copy uses them; Phase 3 removes them.)
+- Keep the disclaimer: probabilities are estimates, not betting advice.
+
+---
+
+## 8. Accessibility contract (non-negotiable)
+
+- Body text ≥ 4.5:1, large text ≥ 3:1, against its own surface.
+- Visible `:focus-visible` ring on every interactive element; never `outline: none` without a replacement.
+- Skip link first in tab order; one `<h1>` per page; no skipped heading levels.
+- Real `<button>` / `<a>`; no clickable `<div>`.
+- Touch targets ≥ 44×44px with ≥ 8px separation.
+- Async updates announce via `aria-live="polite"`.
+- Tables scroll inside a labelled wrapper, never the page.
+- Inputs ≥ 16px font-size to stop iOS zoom.
+- `prefers-reduced-motion` honoured.
+
+---
+
+## 9. What Phase 3 may change
+
+Layout composition, spacing rhythm, type scale, component internals, copy, focus states,
+empty/error states, responsive behaviour, and micro-interactions.
+
+## 10. What Phase 3 must not change — LOCKED
+
+1. The palette in section 2, including outcome colour meanings.
+2. The three font families and their roles.
+3. Brand name, wordmark, badge geometry, league positioning ("La Liga predictions").
+4. Product claims and the honesty framing (backtest vs live record, bookmaker comparison).
+5. La Liga payload bytes while `COMPETITIONS` is off.
+6. The `COMPETITIONS` default (off) and any flag activation.
+7. Forecast values, model weights, database schema.
+8. Page URLs, API paths, and the static rewrite map in `vercel.json`.
