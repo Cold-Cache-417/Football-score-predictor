@@ -6214,3 +6214,50 @@ body[data-page="creator"] .section {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+
+/* Sub-navigation (in-page chapters) */
+.subnav-wrap {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 90;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  transition: transform 240ms var(--ease-out);
+}
+
+.subnav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 48px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.subnav::-webkit-scrollbar { display: none; }
+
+.subnav-link {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 160ms var(--ease-out), border-color 160ms var(--ease-out);
+}
+
+.subnav-link:hover { color: var(--ink); }
+.subnav-link.is-active {
+  color: var(--coral-ink);
+  border-bottom-color: var(--coral);
+}
+
+.scroll-margin {
+  scroll-margin-top: calc(var(--nav-h) + 48px + 20px);
+}
