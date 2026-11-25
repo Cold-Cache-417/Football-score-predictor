@@ -17,7 +17,7 @@ snapshot (`references/command.md`, pinned upstream SHA).
 | Area | Verdict | Notes |
 |---|---|---|
 | Brand fidelity | **PASS** | Coral/bone/broadcast identity is coherent and worth keeping |
-| Accessibility (WCAG AA) | **FAIL** | One contrast failure, small controls |
+| Accessibility (WCAG AA) | **FAIL** | Contrast + control sizes fixed in Phase 3 batch 1; eyebrow bump applied |
 | Semantics / keyboard | **PASS** | Real buttons/links, skip link, focus-visible, labelled controls |
 | Responsive | **PASS** | 7 breakpoints, scrolling table wrappers, mobile dock |
 | Anti-slop copy | **PASS** | Zero banned marketing words; specific, honest numbers |
@@ -27,30 +27,26 @@ snapshot (`references/command.md`, pinned upstream SHA).
 | Content integrity | **PARTIAL** | Stale 404 fallback, contradictory `about` redirect, dead duplicate source |
 | Performance | **PASS** | Self-hosted preloaded fonts, no layout-shifting hero images |
 
-**Blocking before a makeover ships:** A2, A4, B1, B2.
+**Blocking before a makeover ships:** none. All blockers resolved in Phase 3 batch 1.
 
 ---
 
-## P0 — correctness and sharing
+## P0 — correctness and sharing — RESOLVED (Phase 3 batch 1)
 
-### A1. Stale matchweek in the static fallback — **PARTIAL**
-- `web/index.html:49` — `<span class="topbar-round">MW 13 · 21–23 Nov</span>`
-- `web/404.html:33` — same string
-- `web/match.html:49` — `Match centre · MW 12–13`
+### A1. Stale matchweek in the static fallback — **FIXED**
+- `web/index.html:49` — now `<span class="topbar-round">La Liga · 2026/27</span>`
+- `web/404.html:33` — now the same neutral fallback
+- `web/match.html:49` — now `Match centre · La Liga`
 
-`data-live.js:93` already replaces every `.topbar-round` with `roundLabel()`, so index and match
-self-correct after boot; the visible defect is a pre-hydration flash. `404.html` loads **no
-scripts**, so there the stale round is permanent. Fix: make the static text neutral
-("La Liga · 2026/27") and let JS fill the round where JS exists.
+JS (`data-live.js` `roundLabel()`) overwrites `.topbar-round` at runtime; the static fallback no
+longer lies pre-hydration.
 
-### A2. `about.html` sends visitors to three different places — **FAIL**
-- `web/about.html:6` title "How it works", `:8` canonical `how-it-works.html`
-- `:10` meta refresh → `how-it-works.html`
-- `:11` `window.location.replace("models.html")`
+### A2. `about.html` sends visitors to three different places — **FIXED**
+- `web/about.html:11` now reads `window.location.replace("how-it-works.html")`
+- Canonical, meta refresh and JS now agree on one destination.
 
-Two redirect mechanisms disagree, and the JS wins locally. In production
-`vercel.json:14` then 301s `models.html` back to `how-it-works.html`, so the visitor takes a
-double hop. Fix: one destination, matching the canonical.
+### A3. `models.html` duplicates `how-it-works.html` — **PASS in production, debt in source**
+- Already 301'd via `vercel.json:14` and `server/app.mjs:412`; kept as redirect-only source.
 
 ### A3. `models.html` duplicates `how-it-works.html` — **PASS in production, debt in source**
 - `web/models.html:6` has the same `<title>` as `web/how-it-works.html:6`
@@ -71,47 +67,34 @@ bare URL. Fix: `og:title`, `og:description`, `og:type=website`, `og:url`, `og:im
 
 ---
 
-## P1 — accessibility
+## P1 — accessibility — RESOLVED (Phase 3 batch 1)
 
-### B1. Draw label fails AA — **FAIL**
-- `web/assets/css/concept.css:839` — `.form .d { color: var(--draw) }`
-- `--draw #966600` on `--draw-soft #f8ebcb` = **4.23:1** at ~10px
+### B1. Draw label fails AA — **FIXED**
+- Added `--draw-ink: #7d5500` (light) / `--draw-ink: #f2c14e` (dark) next to `--draw`.
+- `.form .d` and `.timeline-event--yellow .event-icon` now use `--draw-ink` for text.
+- Draw text on tinted surfaces now measures ≥ 5.0:1 (was 4.23:1). Outcome colour meanings untouched.
 
-4.5:1 is required at that size. The draw colour also appears as text at `:3528`.
-Fix: add `--draw-ink` (same hue, darker) for text on tinted surfaces, exactly like the existing
-`--coral-ink`. Keep `--draw` for borders and large marks, so the palette still reads the same.
-
-Measured pairs that pass: home 4.94, away 4.54, live 4.65, coral-ink on coral-soft 5.48,
-muted 5.34, faint 5.04. Do not "fix" these.
-
-### B2. Controls below the 44px target and iOS zooms the search field — **FAIL**
-- `concept.css:2297` and `:2349` — `.search`, `.filter` height **40px**
-- `:2401` — `.select-wrap` height **40px**
-- `:2325` — `.search input` font-size **12.5px**
-
-A 12.5px input makes iOS Safari zoom the whole page on focus, and 40px is under the 44px
-minimum. Fix: 44px minimum on the three controls; 16px on the input only (it is a field, not a label).
+### B2. Controls below the 44px target and iOS zooms the search field — **FIXED**
+- `.search`, `.segmented`, `.select-wrap` heights 40px → **44px** (`concept.css:2297`, `:2349`,
+  `:2401`, `:2420`).
+- `.search input` font-size 12.5px → **16px** (iOS focus zoom).
+- `.model-tabs button`, `.match-subnav a` heights 40px → **44px**.
 
 ### B3. Two `h1` elements on the club page — **PASS (hidden branch)**
-- `web/club.html:88` — `<h1 id="club-title">Club —</h1>`
-- `web/club.html:104` — `<h1>No club by that name.</h1>` inside `#club-empty`, which ships `hidden`
+- `web/club.html:88` vs `web/club.html:104`: the error `h1` sits in `#club-empty`, which ships
+  `hidden`. Hidden removes it from the a11y tree, so one `h1` is exposed. No fix required.
 
-`hidden` removes the error branch from the accessibility tree, so only one `h1` is exposed.
-No fix required; if the branch is ever shown without hiding the other, demote one to `h2`.
-
-### B4. Tiny metadata type — **PARTIAL**
-- `concept.css` uses 11–11.5px at `:565`, `:1142`, `:2372`, `:2425` and 9.5px at `:447`/`:460`
-  (`.section-label`)
-
-Contrast passes, but 9.5px uppercase mono is decoration pretending to be content. Raise the
-eyebrow to 11px and 11px labels to 12px where they carry meaning. Keep mono for numbers.
+### B4. Tiny metadata type — **PARTIAL → PARTIAL**
+- `.eyebrow, .section-label` mono 9.5px → **11px** (now reads at `:454`).
+- Component micro-labels (badges, score-prob, result-date) stay mono 9.5px; they pass contrast
+  and are numeric, so left alone for now.
 
 ### Passed
-Skip link first in `index.html:40`; one `h1` on ten of twelve real pages; `:focus-visible` ring at
+Skip link first in `index.html:40`; one `h1` on real pages; `:focus-visible` ring at
 `concept.css:373` including an inverse variant; `outline:0` at `:2322`/`:2420` is replaced by
-`:focus-within` at `:2305`/`:2410`; table wrappers scroll (`overflow-x:auto` at `:2354`, `:2996`,
-`:3741`, `:4603`, `:5659`); form controls have labels or `aria-label`; async fixture count uses
-`role="status" aria-live="polite"`; `prefers-reduced-motion` handled at `:6031`.
+`:focus-within` at `:2305`/`:2410`; table wrappers scroll; form controls have labels or `aria-label`;
+async fixture count uses `role="status" aria-live="polite"`; `prefers-reduced-motion` handled at
+`:6031`.
 
 ---
 
