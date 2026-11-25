@@ -1,0 +1,1 @@
+{"meta":{"competition":{"id":"epl","name":"Premier League"},"providers":[],"providerState":{"state":"unavailable","stale":true,"conflicts":0},"skipped":[],"conflicts":[]},"error":{"code":"COMPETITION_DISABLED","message":"Premier League fixtures are not published. Use /api/fixtures for La Liga."}}

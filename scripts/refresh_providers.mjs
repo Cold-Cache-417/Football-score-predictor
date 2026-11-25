@@ -32,6 +32,14 @@ export const PROVIDERS = [
   { id: "espn", name: "ESPN", url: "https://www.espn.com/soccer/" }
 ];
 
+function providerUrls(competition) {
+  const meta = getCompetition(competition);
+  return {
+    fotmob: meta.providers.fotmob.url,
+    espn: meta.providers.espn.url
+  };
+}
+
 /* Wrap fetch so every provider call is budgeted and recorded. A blocked call
    returns a 429-shaped response: adapters log it like any other failure. */
 function budgetedFetch(fetchImpl, budget, now, calls) {
@@ -66,8 +74,8 @@ export async function refreshProviders({
   const competitions = {};
   const horizonStart = now - 6 * HOUR_MS;
   const horizonEnd = now + horizonDays * 24 * HOUR_MS;
-
   for (const id of competitionIds) {
+    const urls = providerUrls(id);
     const meta = getCompetition(id);
     const primary = await getSeasonFixtures({ competition: id, deps: { ...deps, fetchImpl: fetchFor } });
     const inHorizon = (fixture) => {
@@ -119,6 +127,7 @@ export async function refreshProviders({
       fetchedAt: new Date(now).toISOString(),
       providers: PROVIDERS.map((provider) => ({
         ...provider,
+        url: urls[provider.id],
         role: provider.id === "fotmob"
           ? (primary.ok ? "primary" : "failed")
           : (primary.ok

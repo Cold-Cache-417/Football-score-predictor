@@ -56,6 +56,23 @@
     node.hidden = false;
   }
 
+  /* Stale warning: rendered from the payload, never hard-coded, so a page
+     only warns when the provider snapshot is genuinely stale. */
+  function renderStaleWarning() {
+    const node = document.getElementById("stale-warning");
+    if (!node) return;
+    const stale = C.meta.providerState && C.meta.providerState.stale;
+    if (!stale) {
+      node.hidden = true;
+      node.textContent = "";
+      return;
+    }
+    const lastAttempt = C.meta.providerState.lastAttemptAt;
+    const time = lastAttempt ? ` · last refresh ${stampFmt.format(new Date(lastAttempt))}` : "";
+    node.textContent = `Fixture data is stale${time}. Showing the last good snapshot until the provider refresh succeeds.`;
+    node.hidden = false;
+  }
+
   /* The switcher only appears when the published competitions index exists,
      so a flag-off deployment never links to a page that was not generated. */
   function initCompetitionSwitch() {
@@ -1780,6 +1797,7 @@
   initTheme();
   initNavigation();
   renderAttribution();
+  renderStaleWarning();
   initCompetitionSwitch();
 
   const page = document.body.dataset.page;

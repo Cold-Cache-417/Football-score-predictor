@@ -13,8 +13,8 @@ export const COMPETITIONS = {
     country: "Spain",
     season: "2026/27",
     providers: {
-      fotmob: { leagueId: 87, seasonId: "2026/2027" },
-      espn: { slug: "esp.1" }
+      fotmob: { leagueId: 87, seasonId: "2026/2027", url: "https://www.fotmob.com/leagues/87/laliga" },
+      espn: { slug: "esp.1", url: "https://www.espn.com/soccer/esp.1/" }
     }
   },
   epl: {
@@ -23,8 +23,8 @@ export const COMPETITIONS = {
     country: "England",
     season: "2026/27",
     providers: {
-      fotmob: { leagueId: 47, seasonId: "2026/2027" },
-      espn: { slug: "eng.1" }
+      fotmob: { leagueId: 47, seasonId: "2026/2027", url: "https://www.fotmob.com/leagues/47/premier-league" },
+      espn: { slug: "eng.1", url: "https://www.espn.com/soccer/eng.1/" }
     }
   }
 };

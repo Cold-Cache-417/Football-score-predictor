@@ -17,9 +17,12 @@ import { budgetStatus } from "../server/lib/live.mjs";
 import { competitionsEnabled, DEFAULT_COMPETITION, getCompetition, listCompetitions } from "../server/lib/competitions.mjs";
 
 const SEASON = "2026/27";
-const OUT = path.join(ROOT, "web/api");
+/* CALIBRA_WEB_ROOT lets tests publish into a throwaway directory instead of
+   the real website tree, so parallel test files cannot race each other. */
+const WEB = process.env.CALIBRA_WEB_ROOT ? path.resolve(process.env.CALIBRA_WEB_ROOT) : path.join(ROOT, "web");
+const OUT = path.join(WEB, "api");
 const GRIDS_IN = path.join(ROOT, "data/website/scorelines");
-const GRIDS_OUT = path.join(ROOT, "web/data/website/scorelines");
+const GRIDS_OUT = path.join(WEB, "data/website/scorelines");
 const DB = path.join(ROOT, "data/calibra.db");
 
 const failures = [];
@@ -94,7 +97,7 @@ function copyGrids() {
    from the real template. Every marker must exist, or publish fails. */
 function writeCompetitionPage(competition) {
   const source = path.join(ROOT, "web/fixtures.html");
-  const target = path.join(ROOT, "web", `${competition.id}.html`);
+  const target = path.join(WEB, `${competition.id}.html`);
   let html = fs.readFileSync(source, "utf8");
   const swaps = [
     ["<title>Fixture centre — Calibra</title>", `<title>${competition.name} fixtures — Calibra</title>`],
@@ -130,9 +133,12 @@ const forecasts = listForecasts(db, { season: SEASON });
 const record = summarise(evaluations);
 const stats = ledgerStats(db);
 
-if (forecasts.length !== 260) fail(`forecasts: expected 260, got ${forecasts.length}`);
-if (stats.results !== 119) fail(`results: expected 119, got ${stats.results}`);
-if (stats.forecasts !== 260) fail(`ledgerStats.forecasts: expected 260, got ${stats.forecasts}`);
+/* These are floors, not equality checks: the ledger only ever grows as
+   fixtures settle. A smaller count means a truncated or partially read
+   database, which must never be published. */
+if (forecasts.length < 260) fail(`forecasts: ledger went backwards (${forecasts.length} < 260)`);
+if (stats.results < 119) fail(`results: ledger went backwards (${stats.results} < 119)`);
+if (stats.forecasts < 260) fail(`ledgerStats.forecasts: ledger went backwards (${stats.forecasts} < 260)`);
 if (evaluations.length !== stats.settled) fail(`settled mismatch: ${evaluations.length} vs ${stats.settled}`);
 
 const triggers = db.prepare("SELECT name FROM sqlite_master WHERE type='trigger' ORDER BY name").all().map((r) => r.name);
@@ -223,13 +229,15 @@ const nonDefault = listCompetitions().filter((c) => c.id !== DEFAULT_COMPETITION
 for (const competition of nonDefault) {
   const fixturesFile = path.join(OUT, `fixtures-${competition.id}.json`);
   const bootFile = path.join(OUT, `bootstrap-${competition.id}.js`);
-  const pageFile = path.join(ROOT, "web", `${competition.id}.html`);
+  const pageFile = path.join(WEB, `${competition.id}.html`);
 
   if (!flagOn) {
-    /* The switcher only lists competitions whose page exists, so a disabled
-       JSON body is dead weight: nothing links to it. Delete it instead of
-       writing it, so a flag-off run cannot leave a stale artefact behind. */
-    for (const f of [fixturesFile, bootFile, pageFile]) {
+    /* The switcher only lists competitions whose page exists, but the static
+       routing (vercel.json) rewrites /api/fixtures/epl to fixtures-epl.json.
+       To avoid a 404, we write a disabled body for the API while deleting
+       the browser assets (epl.html, bootstrap-epl.js). */
+    writeJson(fixturesFile, disabledCompetition(competition.id, competition.name));
+    for (const f of [bootFile, pageFile]) {
       try { fs.unlinkSync(f); } catch { /* absent already */ }
     }
     continue;
@@ -274,7 +282,7 @@ for (const competition of nonDefault) {
 }
 
 const publishedCompetitions = listCompetitions().filter(
-  (c) => c.id === DEFAULT_COMPETITION || fs.existsSync(path.join(ROOT, "web", `${c.id}.html`))
+  (c) => c.id === DEFAULT_COMPETITION || fs.existsSync(path.join(WEB, `${c.id}.html`))
 );
 writeJson(path.join(OUT, "competitions.json"), {
   default: DEFAULT_COMPETITION,

@@ -92,23 +92,27 @@ test("RPS and log loss match the locked evaluation convention", () => {
 });
 
 test("a live feed marks the fixture live without inventing a result", () => {
+  /* Pick a genuinely upcoming fixture from the current data instead of a
+     hard-coded id: once a matchweek settles, a fixed fixture disappears. */
+  const upcoming = buildPayload().fixtures.find((fixture) => fixture.status === "upcoming");
+  assert.ok(upcoming, "the payload must contain an upcoming fixture");
   const liveFeed = {
     state: "ok",
     updatedAt: "2026-11-22T19:05:00.000Z",
     matches: [
       {
-        home: "ala",
-        away: "dep",
+        home: upcoming.home,
+        away: upcoming.away,
         minute: 37,
         statusShort: "1H",
         homeGoals: 1,
         awayGoals: 0,
-        events: [{ minute: 12, type: "goal", team: "ala", player: "Player A", detail: "Normal Goal" }]
+        events: [{ minute: 12, type: "goal", team: upcoming.home, player: "Player A", detail: "Normal Goal" }]
       }
     ]
   };
   const payload = buildPayload({ liveFeed });
-  const fixture = payload.fixtures.find((f) => f.id === "m-2026-11-22-ala-dep");
+  const fixture = payload.fixtures.find((f) => f.id === upcoming.id);
   assert.ok(fixture, "fixture is in the payload");
   assert.equal(fixture.status, "live");
   assert.equal(fixture.minute, 37);

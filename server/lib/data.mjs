@@ -492,7 +492,18 @@ export function buildPayload({
 
   const settled = [...byId.values()];
   const playedIds = new Set(settled.map((fixture) => fixture.id));
-  const upcoming = predictions.fixtures.filter((fixture) => !playedIds.has(fixture.id));
+  /* A prediction exported before kickoff is keyed by its planned date, so once
+     the fixture is played its settled id (real date) no longer matches. Without
+     this second guard the stale prediction survives as a phantom "upcoming"
+     fixture, which keeps its matchweek unplayed and blocks the publish check. */
+  const playedSlots = new Set(
+    settled.filter((fixture) => fixture.mw).map((fixture) => `${fixture.mw}|${fixture.home}|${fixture.away}`)
+  );
+  const upcoming = predictions.fixtures.filter(
+    (fixture) =>
+      !playedIds.has(fixture.id) &&
+      !(fixture.mw && playedSlots.has(`${fixture.mw}|${fixture.home}|${fixture.away}`))
+  );
 
   // A forecast whose kickoff has passed but has no result yet is not
   // "upcoming" any more — label it honestly instead of pretending.
