@@ -1695,6 +1695,10 @@ svg {
   padding-block: clamp(48px, 6vw, 84px);
 }
 
+.wrap--text {
+  max-width: 68ch;
+}
+
 .section--inverse {
   background: var(--inv-bg);
   color: var(--inv-ink);
