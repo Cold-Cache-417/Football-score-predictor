@@ -203,6 +203,7 @@
   --home-soft: #dff3ea;
   --home-bright: #3ddc97;
   --draw: #966600;
+  --draw-ink: #7d5500;
   --draw-soft: #f8ebcb;
   --draw-bright: #f2c14e;
   --away: #2367c9;
@@ -270,6 +271,7 @@
   --home: #3ddc97;
   --home-soft: rgba(61, 220, 151, 0.14);
   --draw: #f2c14e;
+  --draw-ink: #f2c14e;
   --draw-soft: rgba(242, 193, 78, 0.14);
   --away: #7cb3ff;
   --away-soft: rgba(124, 179, 255, 0.14);
@@ -836,7 +838,7 @@ svg {
 
 .form .d {
   background: var(--draw-soft);
-  color: var(--draw);
+  color: var(--draw-ink);
 }
 
 .form .l {
@@ -1157,6 +1159,7 @@ svg {
     display: flex;
     align-items: center;
   }
+.mobile-dock {
   position: fixed;
   left: 0;
   right: 0;
@@ -2294,7 +2297,7 @@ a.table-team:focus-visible .table-team-name {
   display: flex;
   align-items: center;
   gap: 7px;
-  height: 40px;
+  height: 44px;
   padding: 0 9px;
   border: 1px solid var(--line);
   border-radius: var(--radius-xs);
@@ -2322,7 +2325,8 @@ a.table-team:focus-visible .table-team-name {
   outline: 0;
   background: transparent;
   font-family: var(--font-sans);
-  font-size: 12.5px;
+  /* 16px stops iOS Safari zooming the viewport on focus. */
+  font-size: 16px;
 }
 
 .search input::placeholder {
@@ -2346,7 +2350,7 @@ a.table-team:focus-visible .table-team-name {
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  height: 40px;
+  height: 44px;
   padding: 3px;
   border: 1px solid var(--line);
   border-radius: var(--radius-xs);
@@ -2398,7 +2402,7 @@ a.table-team:focus-visible .table-team-name {
 
 .select-wrap {
   position: relative;
-  height: 40px;
+  height: 44px;
   min-width: 116px;
   border: 1px solid var(--line);
   border-radius: var(--radius-xs);
@@ -3525,7 +3529,7 @@ a.table-team:focus-visible .table-team-name {
 
 .timeline-event--yellow .event-icon {
   background: var(--draw-soft);
-  color: var(--draw);
+  color: var(--draw-ink);
 }
 
 .timeline-event--chance .event-icon {
@@ -5546,7 +5550,7 @@ body[data-page="creator"] .section {
 
   .model-tabs button,
   .match-subnav a {
-    height: 40px;
+    height: 44px;
     padding: 0 9px;
   }
 
