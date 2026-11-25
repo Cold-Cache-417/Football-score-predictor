@@ -32,12 +32,12 @@ if (evals.length === 0) {
   console.log('\nTo verify the evaluation machinery on historical data, run with a simulated joined pair.');
 } else {
   const summary = summarise(evals);
-  console.log(`\nAccuracy:   ${(summary.blend.accuracy * 100).toFixed(1)}%`);
-  console.log(`Mean RPS:   ${summary.blend.rps.toFixed(4)}`);
-  console.log(`Log Loss:   ${summary.blend.logLoss.toFixed(4)}`);
-  console.log(`Brier:      ${summary.blend.brier.toFixed(4)}`);
+  console.log(`\nMatches:    ${summary.matches}`);
+  console.log(`Accuracy:   ${summary.accuracy.toFixed(1)}%`);
+  console.log(`Mean RPS:   ${summary.rps.toFixed(4)}`);
+  console.log(`Log Loss:   ${summary.logLoss.toFixed(4)}`);
   for (const e of evals.slice(0, 5)) {
-    console.log(`  ${e.home} vs ${e.away}: actual ${e.actual.home}-${e.actual.away} (${e.outcome})`);
+    console.log(`  ${e.home} vs ${e.away}: actual ${e.score[0]}-${e.score[1]} (${e.outcomeLabel})`);
   }
 }
 
