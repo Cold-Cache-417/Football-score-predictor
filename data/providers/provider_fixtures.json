@@ -1,8 +1,8 @@
 {
- "updatedAt": "2026-11-27T15:29:08.338Z",
+ "updatedAt": "2026-11-27T23:40:33.404Z",
  "competitions": {
   "epl": {
-   "fetchedAt": "2026-11-27T05:26:39.462Z",
+   "fetchedAt": "2026-11-27T23:40:33.404Z",
    "providers": [
     {
      "id": "fotmob",
@@ -23,7 +23,7 @@
     "fallbackUsed": false,
     "stale": false,
     "lastError": null,
-    "lastAttemptAt": "2026-11-27T15:29:08.338Z",
+    "lastAttemptAt": "2026-11-27T23:40:33.404Z",
     "conflicts": 0
    },
    "fixtures": [
@@ -36,12 +36,15 @@
      "home": "nfo",
      "away": "che",
      "venue": "",
-     "status": "upcoming",
-     "providerStatus": "scheduled",
+     "status": "result",
+     "providerStatus": "finished",
      "source": "fotmob",
      "provider": "fotmob",
      "providerMatchId": "5795533",
-     "score": null,
+     "score": [
+      3,
+      2
+     ],
      "xg": null,
      "p": null
     },
@@ -392,6 +395,5 @@
    "conflicts": [],
    "unmatchedSecondary": []
   }
- },
- "lastAttemptAt": "2026-11-27T15:29:08.338Z"
+ }
 }
