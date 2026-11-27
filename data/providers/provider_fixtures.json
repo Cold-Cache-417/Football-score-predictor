@@ -1,8 +1,8 @@
 {
- "updatedAt": "2026-11-26T23:48:33.970Z",
+ "updatedAt": "2026-11-27T05:26:39.462Z",
  "competitions": {
   "epl": {
-   "fetchedAt": "2026-11-26T23:48:33.970Z",
+   "fetchedAt": "2026-11-27T05:26:39.462Z",
    "providers": [
     {
      "id": "fotmob",
@@ -23,7 +23,7 @@
     "fallbackUsed": false,
     "stale": false,
     "lastError": null,
-    "lastAttemptAt": "2026-11-26T23:48:33.970Z",
+    "lastAttemptAt": "2026-11-27T05:26:39.462Z",
     "conflicts": 0
    },
    "fixtures": [
@@ -31,7 +31,7 @@
      "id": "p-epl-5795533",
      "mw": null,
      "day": "2026-11-27",
-     "date": "2026-11-27T20:00:00Z",
+     "date": "2026-11-27T20:00:00.000Z",
      "timeTBC": false,
      "home": "nfo",
      "away": "che",
