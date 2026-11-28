@@ -1,8 +1,8 @@
 {
- "updatedAt": "2026-11-28T04:58:37.778Z",
+ "updatedAt": "2026-11-28T14:02:08.314Z",
  "competitions": {
   "epl": {
-   "fetchedAt": "2026-11-28T04:58:37.778Z",
+   "fetchedAt": "2026-11-28T14:02:08.314Z",
    "providers": [
     {
      "id": "fotmob",
@@ -23,7 +23,7 @@
     "fallbackUsed": false,
     "stale": false,
     "lastError": null,
-    "lastAttemptAt": "2026-11-28T04:58:37.778Z",
+    "lastAttemptAt": "2026-11-28T14:02:08.314Z",
     "conflicts": 0
    },
    "fixtures": [
@@ -368,11 +368,72 @@
      "score": null,
      "xg": null,
      "p": null
+    },
+    {
+     "id": "p-epl-5795548",
+     "mw": null,
+     "day": "2026-12-05",
+     "date": "2026-12-05T12:30:00Z",
+     "timeTBC": false,
+     "home": "che",
+     "away": "liv",
+     "venue": "",
+     "status": "upcoming",
+     "providerStatus": "scheduled",
+     "source": "fotmob",
+     "provider": "fotmob",
+     "providerMatchId": "5795548",
+     "score": null,
+     "xg": null,
+     "p": null
     }
    ],
    "skipped": [],
    "conflicts": [],
-   "unmatchedSecondary": []
+   "unmatchedSecondary": [
+    {
+     "source": "espn",
+     "providerMatchId": "401879216",
+     "home": "AFC Bournemouth",
+     "away": "Hull City",
+     "kickoffUtc": "2026-12-05T15:00Z"
+    },
+    {
+     "source": "espn",
+     "providerMatchId": "401879215",
+     "home": "Aston Villa",
+     "away": "Crystal Palace",
+     "kickoffUtc": "2026-12-05T15:00Z"
+    },
+    {
+     "source": "espn",
+     "providerMatchId": "401879211",
+     "home": "Leeds United",
+     "away": "Ipswich Town",
+     "kickoffUtc": "2026-12-05T15:00Z"
+    },
+    {
+     "source": "espn",
+     "providerMatchId": "401879210",
+     "home": "Manchester United",
+     "away": "Coventry City",
+     "kickoffUtc": "2026-12-05T15:00Z"
+    },
+    {
+     "source": "espn",
+     "providerMatchId": "401878747",
+     "home": "Nottingham Forest",
+     "away": "Brighton & Hove Albion",
+     "kickoffUtc": "2026-12-05T17:30Z"
+    },
+    {
+     "source": "espn",
+     "providerMatchId": "401879214",
+     "home": "Brentford",
+     "away": "Manchester City",
+     "kickoffUtc": "2026-12-05T20:00Z"
+    }
+   ]
   }
  }
 }
